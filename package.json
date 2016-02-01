@@ -1,0 +1,19 @@
+{
+  "name": "unlease-chess",
+  "version": "1.0.0",
+  "description": "Unlease chess job application",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dejakob/unlease-chess.git"
+  },
+  "author": "dejakob",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dejakob/unlease-chess/issues"
+  },
+  "homepage": "https://github.com/dejakob/unlease-chess#readme"
+}
