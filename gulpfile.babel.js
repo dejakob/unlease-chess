@@ -5,15 +5,17 @@ import react from 'gulp-react';
 import concat from 'gulp-concat';
 import uglify from 'gulp-uglify';
 import rename from 'gulp-rename';
+import watch from 'gulp-watch';
 
 gulp.task('default', ['script']);
+gulp.task('watch', watchTask);
 
 gulp.task('script', ['script:vendors', 'script:main']);
 gulp.task('script:vendors', vendorsTask);
 gulp.task('script:main', scriptTask);
 
 function vendorsTask () {
-    gulp
+    return gulp
         .src([
             'node_modules/flux/dist/Flux.js'
         ])
@@ -25,7 +27,7 @@ function vendorsTask () {
 }
 
 function scriptTask () {
-    gulp
+    return gulp
         .src([
             './src/main.js'
         ])
@@ -46,5 +48,8 @@ function scriptTask () {
         .pipe(uglify())
         .pipe(rename({ suffix: '.min' }))
         .pipe(gulp.dest('.'));
+}
 
+function watchTask () {
+    return watch('./src/**/*.js', scriptTask);
 }

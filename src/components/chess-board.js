@@ -24,10 +24,24 @@ export default class ChessBoard extends React.Component
      * Render the component
      */
     render () {
+        const size = `${50 * 16}px`;
+        const style = {
+            height: size,
+            width: size,
+            border: '1px #000000 solid'
+        };
+
         const fields = [];
 
-        for (let i = 0; i < 16; i++) {
-            const background = i % 2 === 0 ? '#ffffff' : '#000000';
+        for (let i = 0; i < Math.pow(16, 2); i++) {
+            const row = Math.floor(i / 16);
+            const column = i % 16;
+            const background = (
+                row % 2 > 0 && column % 2 > 0 ||
+                row % 2 === 0 && column % 2 === 0
+            ) ?
+                '#ffffff' :
+                '#000000';
             const fieldKey = `field${i}`;
 
             fields.push(
@@ -36,7 +50,7 @@ export default class ChessBoard extends React.Component
         }
 
         return (
-            <div>
+            <div style={style}>
                 { fields }
             </div>
         );

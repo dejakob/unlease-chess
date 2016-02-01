@@ -25,8 +25,8 @@ export default class ChessField extends React.Component
     render () {
         // TODO default value with constants
         const background = this.props.background;
-        const height = '100px';
-        const width = '100px';
+        const height = '50px';
+        const width = '50px';
         const float = 'left';
 
         const style = {

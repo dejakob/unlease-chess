@@ -19851,10 +19851,19 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
+	            var size = 50 * 16 + 'px';
+	            var style = {
+	                height: size,
+	                width: size,
+	                border: '1px #000000 solid'
+	            };
+
 	            var fields = [];
 
-	            for (var i = 0; i < 16; i++) {
-	                var background = i % 2 === 0 ? '#ffffff' : '#000000';
+	            for (var i = 0; i < Math.pow(16, 2); i++) {
+	                var row = Math.floor(i / 16);
+	                var column = i % 16;
+	                var background = row % 2 > 0 && column % 2 > 0 || row % 2 === 0 && column % 2 === 0 ? '#ffffff' : '#000000';
 	                var fieldKey = 'field' + i;
 
 	                fields.push(React.createElement(_chessField2.default, { background: background, key: fieldKey }));
@@ -19862,7 +19871,7 @@
 
 	            return React.createElement(
 	                'div',
-	                null,
+	                { style: style },
 	                fields
 	            );
 	        }
@@ -19882,7 +19891,7 @@
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
 
 	var _react = __webpack_require__(1);
@@ -19902,51 +19911,52 @@
 	 */
 
 	var ChessField = function (_React$Component) {
-	  _inherits(ChessField, _React$Component);
+	    _inherits(ChessField, _React$Component);
 
-	  function ChessField() {
-	    _classCallCheck(this, ChessField);
+	    function ChessField() {
+	        _classCallCheck(this, ChessField);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(ChessField).apply(this, arguments));
-	  }
-
-	  _createClass(ChessField, [{
-	    key: 'componentDidMount',
-
-	    /**
-	     * When the component gets activated
-	     */
-	    value: function componentDidMount() {}
-
-	    /**
-	     * Just before deactivating the component
-	     */
-
-	  }, {
-	    key: 'componentWillUnmount',
-	    value: function componentWillUnmount() {}
-
-	    /**
-	     * Render the component
-	     */
-
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      // TODO default value with constants
-	      var background = this.props.background;
-	      var height = '100px';
-	      var width = '100px';
-
-	      var style = {
-	        background: background, height: height, width: width
-	      };
-
-	      return React.createElement('div', { style: style });
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(ChessField).apply(this, arguments));
 	    }
-	  }]);
 
-	  return ChessField;
+	    _createClass(ChessField, [{
+	        key: 'componentDidMount',
+
+	        /**
+	         * When the component gets activated
+	         */
+	        value: function componentDidMount() {}
+
+	        /**
+	         * Just before deactivating the component
+	         */
+
+	    }, {
+	        key: 'componentWillUnmount',
+	        value: function componentWillUnmount() {}
+
+	        /**
+	         * Render the component
+	         */
+
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            // TODO default value with constants
+	            var background = this.props.background;
+	            var height = '50px';
+	            var width = '50px';
+	            var float = 'left';
+
+	            var style = {
+	                background: background, height: height, width: width, float: float
+	            };
+
+	            return React.createElement('div', { style: style });
+	        }
+	    }]);
+
+	    return ChessField;
 	}(React.Component);
 
 	exports.default = ChessField;
