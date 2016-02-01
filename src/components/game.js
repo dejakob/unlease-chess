@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ChessBoard from './chess-board.jsx';
+import ChessBoard from './chess-board';
 
 /**
  * The Game class

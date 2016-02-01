@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
-import Game from './components/game.jsx';
+import Game from './components/game';
 
 console.log('react', React);
 console.log('Game', Game);

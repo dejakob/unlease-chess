@@ -19794,6 +19794,94 @@
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var React = _interopRequireWildcard(_react);
+
+	var _chessField = __webpack_require__(161);
+
+	var _chessField2 = _interopRequireDefault(_chessField);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * The ChessBoard class
+	 */
+
+	var ChessBoard = function (_React$Component) {
+	    _inherits(ChessBoard, _React$Component);
+
+	    function ChessBoard() {
+	        _classCallCheck(this, ChessBoard);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(ChessBoard).apply(this, arguments));
+	    }
+
+	    _createClass(ChessBoard, [{
+	        key: 'componentDidMount',
+
+	        /**
+	         * When the component gets activated
+	         */
+	        value: function componentDidMount() {}
+
+	        /**
+	         * Just before deactivating the component
+	         */
+
+	    }, {
+	        key: 'componentWillUnmount',
+	        value: function componentWillUnmount() {}
+
+	        /**
+	         * Render the component
+	         */
+
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var fields = [];
+
+	            for (var i = 0; i < 16; i++) {
+	                var background = i % 2 === 0 ? '#ffffff' : '#000000';
+	                var fieldKey = 'field' + i;
+
+	                fields.push(React.createElement(_chessField2.default, { background: background, key: fieldKey }));
+	            }
+
+	            return React.createElement(
+	                'div',
+	                null,
+	                fields
+	            );
+	        }
+	    }]);
+
+	    return ChessBoard;
+	}(React.Component);
+
+	exports.default = ChessBoard;
+
+/***/ },
+/* 161 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 
@@ -19810,19 +19898,19 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	/**
-	 * The ChessBoard class
+	 * The ChessField class
 	 */
 
-	var ChessBoard = function (_React$Component) {
-	  _inherits(ChessBoard, _React$Component);
+	var ChessField = function (_React$Component) {
+	  _inherits(ChessField, _React$Component);
 
-	  function ChessBoard() {
-	    _classCallCheck(this, ChessBoard);
+	  function ChessField() {
+	    _classCallCheck(this, ChessField);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(ChessBoard).apply(this, arguments));
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(ChessField).apply(this, arguments));
 	  }
 
-	  _createClass(ChessBoard, [{
+	  _createClass(ChessField, [{
 	    key: 'componentDidMount',
 
 	    /**
@@ -19845,14 +19933,23 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      return React.createElement('div', null);
+	      // TODO default value with constants
+	      var background = this.props.background;
+	      var height = '100px';
+	      var width = '100px';
+
+	      var style = {
+	        background: background, height: height, width: width
+	      };
+
+	      return React.createElement('div', { style: style });
 	    }
 	  }]);
 
-	  return ChessBoard;
+	  return ChessField;
 	}(React.Component);
 
-	exports.default = ChessBoard;
+	exports.default = ChessField;
 
 /***/ }
 /******/ ]);
