@@ -1,10 +1,10 @@
-import { React, Component } from 'React';
-import ChessBoard from './chess-board';
+import * as React from 'react';
+import ChessBoard from './chess-board.jsx';
 
 /**
  * The Game class
  */
-export default class Game extends Component
+export default class Game extends React.Component
 {
     /**
      * Render the game

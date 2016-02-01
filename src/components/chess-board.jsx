@@ -1,18 +1,10 @@
-import { Component } from 'React';
+import * as React from 'react';
 
 /**
  * The ChessBoard class
  */
-export default class ChessBoard extends Component
+export default class ChessBoard extends React.Component
 {
-    /**
-     * Get the initial state
-     * @returns {{}}
-     */
-    getInitialState () {
-        return {};
-    }
-
     /**
      * When the component gets activated
      */
@@ -31,6 +23,8 @@ export default class ChessBoard extends Component
      * Render the component
      */
     render () {
-
+        return (
+            <div></div>
+        );
     }
 }
