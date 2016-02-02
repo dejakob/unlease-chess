@@ -1,5 +1,6 @@
 import * as React from 'react';
 import ChessField from './chess-field';
+import ChessPiece from './chess-piece';
 
 /**
  * The ChessBoard class
@@ -44,9 +45,18 @@ export default class ChessBoard extends React.Component
                 '#000000';
             const fieldKey = `field${i}`;
 
-            fields.push(
-                <ChessField background={background} key={fieldKey} />
-            );
+            if (row === 0 && column === 0) {
+                fields.push(
+                    <ChessField background={background} key={fieldKey}>
+                        <ChessPiece />
+                    </ChessField>
+                );
+            }
+            else {
+                fields.push(
+                    <ChessField background={background} key={fieldKey} />
+                );
+            }
         }
 
         return (

@@ -19805,6 +19805,10 @@
 
 	var _chessField2 = _interopRequireDefault(_chessField);
 
+	var _chessPiece = __webpack_require__(162);
+
+	var _chessPiece2 = _interopRequireDefault(_chessPiece);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -19866,7 +19870,15 @@
 	                var background = row % 2 > 0 && column % 2 > 0 || row % 2 === 0 && column % 2 === 0 ? '#ffffff' : '#000000';
 	                var fieldKey = 'field' + i;
 
-	                fields.push(React.createElement(_chessField2.default, { background: background, key: fieldKey }));
+	                if (row === 0 && column === 0) {
+	                    fields.push(React.createElement(
+	                        _chessField2.default,
+	                        { background: background, key: fieldKey },
+	                        React.createElement(_chessPiece2.default, null)
+	                    ));
+	                } else {
+	                    fields.push(React.createElement(_chessField2.default, { background: background, key: fieldKey }));
+	                }
 	            }
 
 	            return React.createElement(
@@ -19952,7 +19964,11 @@
 	                background: background, height: height, width: width, float: float
 	            };
 
-	            return React.createElement('div', { style: style });
+	            return React.createElement(
+	                'div',
+	                { style: style },
+	                this.props.children
+	            );
 	        }
 	    }]);
 
@@ -19960,6 +19976,83 @@
 	}(React.Component);
 
 	exports.default = ChessField;
+
+/***/ },
+/* 162 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var React = _interopRequireWildcard(_react);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * ChessPiece class
+	 */
+
+	var ChessPiece = function (_React$Component) {
+	  _inherits(ChessPiece, _React$Component);
+
+	  function ChessPiece() {
+	    _classCallCheck(this, ChessPiece);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(ChessPiece).apply(this, arguments));
+	  }
+
+	  _createClass(ChessPiece, [{
+	    key: 'componentDidMount',
+
+	    /**
+	     * When the component gets activated
+	     */
+	    value: function componentDidMount() {}
+
+	    /**
+	     * Just before deactivating the component
+	     */
+
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {}
+
+	    /**
+	     * Render the component
+	     */
+
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var size = '50px';
+	      var style = {
+	        height: size,
+	        width: size,
+	        borderRadius: '50% 50%',
+	        backgroundColor: '#ff0000'
+	      };
+
+	      return React.createElement('div', { style: style });
+	    }
+	  }]);
+
+	  return ChessPiece;
+	}(React.Component);
+
+	exports.default = ChessPiece;
 
 /***/ }
 /******/ ]);

@@ -34,7 +34,9 @@ export default class ChessField extends React.Component
         };
 
         return (
-            <div style={style}></div>
+            <div style={style}>
+                {this.props.children}
+            </div>
         );
     }
 }
