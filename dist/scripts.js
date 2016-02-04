@@ -19805,13 +19805,15 @@
 
 	var _chessField2 = _interopRequireDefault(_chessField);
 
-	var _chessPiece = __webpack_require__(182);
+	var _chessPiece = __webpack_require__(183);
 
 	var _chessPiece2 = _interopRequireDefault(_chessPiece);
 
 	var _draggingStore = __webpack_require__(162);
 
 	var _draggingStore2 = _interopRequireDefault(_draggingStore);
+
+	var _style = __webpack_require__(182);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -19876,7 +19878,7 @@
 	            for (var i = 0; i < Math.pow(16, 2); i++) {
 	                var row = Math.floor(i / 16);
 	                var column = i % 16;
-	                var background = row % 2 > 0 && column % 2 > 0 || row % 2 === 0 && column % 2 === 0 ? '#ffffff' : '#000000';
+	                var background = row % 2 > 0 && column % 2 > 0 || row % 2 === 0 && column % 2 === 0 ? _style.STYLE.CHESS_FIELD.COLORS.LIGHT : _style.STYLE.CHESS_FIELD.COLORS.DARK;
 	                var fieldKey = 'field' + i;
 
 	                // TODO make iterator component
@@ -19985,6 +19987,8 @@
 
 	var _draggingStore2 = _interopRequireDefault(_draggingStore);
 
+	var _style = __webpack_require__(182);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -20016,7 +20020,13 @@
 	         */
 	        value: function componentDidMount() {
 	            this.originalBackground = this.props.background;
+	            this.top = this.props.row * this.props.size;
+	            this.left = this.props.column * this.props.size;
+	            this.bottom = this.top + this.props.size;
+	            this.right = this.left + this.props.size;
+
 	            _draggingStore2.default.getInstance().addCursorPositionWatcher(this._cursorPositionChanged.bind(this));
+	            _draggingStore2.default.getInstance().addIsDraggingWatcher(this._isDraggingChanged.bind(this));
 	        }
 
 	        /**
@@ -20041,10 +20051,8 @@
 	            var float = 'left';
 
 	            if (_typeof(this.state) === 'object' && this.state !== null && this.state.active === true) {
-	                background = 'green';
+	                background = _style.STYLE.CHESS_FIELD.COLORS.ACTIVE;
 	            }
-
-	            console.log('STATE', this.props.row, this.props.column, this.state);
 
 	            var style = {
 	                background: background, height: height, width: width, float: float
@@ -20066,13 +20074,23 @@
 	    }, {
 	        key: '_cursorPositionChanged',
 	        value: function _cursorPositionChanged(position) {
-	            var top = this.props.row * this.props.size;
-	            var left = this.props.column * this.props.size;
-	            var bottom = top + this.props.size;
-	            var right = left + this.props.size;
-	            var active = position.x > left && position.x < right && position.y > top && position.y < bottom;
+	            var active = position.x > this.left && position.x < this.right && position.y > this.top && position.y < this.bottom;
 
 	            this.setState({ active: active });
+	        }
+
+	        /**
+	         *
+	         * @param {Boolean} isDragging
+	         * @private
+	         */
+
+	    }, {
+	        key: '_isDraggingChanged',
+	        value: function _isDraggingChanged(isDragging) {
+	            if (isDragging === false) {
+	                this.setState({ active: false });
+	            }
 	        }
 	    }]);
 
@@ -21004,6 +21022,25 @@
 
 /***/ },
 /* 182 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var STYLE = exports.STYLE = {
+	    CHESS_FIELD: {
+	        COLORS: {
+	            ACTIVE: '#A8DAFD',
+	            DARK: '#000000',
+	            LIGHT: '#FFFFFF'
+	        }
+	    }
+	};
+
+/***/ },
+/* 183 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

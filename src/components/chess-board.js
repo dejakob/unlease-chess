@@ -2,6 +2,7 @@ import * as React from 'react';
 import ChessField from './chess-field';
 import ChessPiece from './chess-piece';
 import DraggingStore from '../stores/dragging-store';
+import { STYLE } from '../constants/style';
 
 /**
  * The ChessBoard class
@@ -45,8 +46,8 @@ export default class ChessBoard extends React.Component
                 row % 2 > 0 && column % 2 > 0 ||
                 row % 2 === 0 && column % 2 === 0
             ) ?
-                '#ffffff' :
-                '#000000';
+                STYLE.CHESS_FIELD.COLORS.LIGHT :
+                STYLE.CHESS_FIELD.COLORS.DARK;
             const fieldKey = `field${i}`;
 
             // TODO make iterator component

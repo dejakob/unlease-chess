@@ -1,5 +1,6 @@
 import * as React from 'react';
 import DraggingStore from '../stores/dragging-store';
+import { STYLE } from '../constants/style';
 
 /**
  * The ChessField class
@@ -11,7 +12,13 @@ export default class ChessField extends React.Component
      */
     componentDidMount () {
         this.originalBackground = this.props.background;
+        this.top = this.props.row * this.props.size;
+        this.left = this.props.column * this.props.size;
+        this.bottom = this.top + this.props.size;
+        this.right = this.left + this.props.size;
+
         DraggingStore.getInstance().addCursorPositionWatcher(this._cursorPositionChanged.bind(this));
+        DraggingStore.getInstance().addIsDraggingWatcher(this._isDraggingChanged.bind(this));
     }
 
     /**
@@ -32,10 +39,8 @@ export default class ChessField extends React.Component
         const float = 'left';
 
         if (typeof this.state === 'object' && this.state !== null && this.state.active === true) {
-            background = 'green';
+            background = STYLE.CHESS_FIELD.COLORS.ACTIVE;
         }
-
-        console.log('STATE', this.props.row, this.props.column, this.state);
 
         const style = {
             background, height, width, float
@@ -54,15 +59,22 @@ export default class ChessField extends React.Component
      * @private
      */
     _cursorPositionChanged (position) {
-        const top = this.props.row * this.props.size;
-        const left = this.props.column * this.props.size;
-        const bottom = top + this.props.size;
-        const right = left + this.props.size;
-        const active = position.x > left &&
-            position.x < right &&
-            position.y > top &&
-            position.y < bottom;
+        const active = position.x > this.left &&
+            position.x < this.right &&
+            position.y > this.top &&
+            position.y < this.bottom;
 
         this.setState({ active });
+    }
+
+    /**
+     *
+     * @param {Boolean} isDragging
+     * @private
+     */
+    _isDraggingChanged (isDragging) {
+        if (isDragging === false) {
+            this.setState({ active: false });
+        }
     }
 }
