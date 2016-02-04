@@ -1,6 +1,7 @@
 import * as React from 'react';
 import ChessField from './chess-field';
 import ChessPiece from './chess-piece';
+import DraggingStore from '../stores/dragging-store';
 
 /**
  * The ChessBoard class
@@ -11,7 +12,11 @@ export default class ChessBoard extends React.Component
      * When the component gets activated
      */
     componentDidMount () {
+        this._isDragging = false;
 
+        console.log('DraggingStore instance', DraggingStore.getInstance());
+
+        DraggingStore.getInstance().addIsDraggingWatcher(this._draggingStart);
     }
 
     /**
@@ -64,5 +69,21 @@ export default class ChessBoard extends React.Component
                 { fields }
             </div>
         );
+    }
+
+    /**
+     * Start the dragging
+     * @private
+     */
+    _draggingStart (isDragging) {
+        console.log('DRAGGING STAAART!', isDragging);
+
+        // TODO: move this to store and get isDragging with getter
+        this._isDragging = true;
+    }
+
+    _onMouseUp () {
+        DraggingStore.getInstance().emitDraggingChange();
+
     }
 }

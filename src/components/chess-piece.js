@@ -1,4 +1,5 @@
 import * as React from 'react';
+import DraggingStore from '../stores/dragging-store';
 
 /**
  * ChessPiece class
@@ -32,7 +33,12 @@ export default class ChessPiece extends React.Component
         };
 
         return (
-            <div style={style}></div>
+            <div style={style} onMouseDown={this._onMouseDown}></div>
         );
+    }
+
+    _onMouseDown (event) {
+        // Fire to set isDragging
+        DraggingStore.getInstance().emitDraggingChange(true);
     }
 }
