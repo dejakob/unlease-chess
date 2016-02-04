@@ -5,5 +5,8 @@ export const STYLE = {
             DARK: '#000000',
             LIGHT: '#FFFFFF'
         }
+    },
+    CHESS_PIECE: {
+        BACKGROUND: 'url(dist/images/chess-piece.jpg)'
     }
 };

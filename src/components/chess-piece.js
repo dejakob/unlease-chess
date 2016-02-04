@@ -1,5 +1,6 @@
 import * as React from 'react';
 import DraggingStore from '../stores/dragging-store';
+import { STYLE } from '../constants/style';
 
 /**
  * ChessPiece class
@@ -29,7 +30,7 @@ export default class ChessPiece extends React.Component
             height: size,
             width: size,
             borderRadius: '50% 50%',
-            backgroundColor: '#ff0000'
+            background: STYLE.CHESS_PIECE.BACKGROUND
         };
 
         return (

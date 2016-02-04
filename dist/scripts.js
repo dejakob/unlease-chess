@@ -21036,6 +21036,9 @@
 	            DARK: '#000000',
 	            LIGHT: '#FFFFFF'
 	        }
+	    },
+	    CHESS_PIECE: {
+	        BACKGROUND: 'url(dist/images/chess-piece.jpg)'
 	    }
 	};
 
@@ -21058,6 +21061,8 @@
 	var _draggingStore = __webpack_require__(162);
 
 	var _draggingStore2 = _interopRequireDefault(_draggingStore);
+
+	var _style = __webpack_require__(182);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -21112,7 +21117,7 @@
 	                height: size,
 	                width: size,
 	                borderRadius: '50% 50%',
-	                backgroundColor: '#ff0000'
+	                background: _style.STYLE.CHESS_PIECE.BACKGROUND
 	            };
 
 	            return React.createElement('div', { style: style,
