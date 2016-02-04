@@ -36,7 +36,7 @@ export default class DraggingStore extends EventEmitter
          * @param {Object} position
          */
         function emitCursorPositionChange (position) {
-            vm.emit(IS_DRAGGING_CHANGED, position);
+            vm.emit(CURSOR_POSITION_CHANGED, position);
         }
 
         /**

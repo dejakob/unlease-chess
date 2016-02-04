@@ -11,7 +11,6 @@ export default class ChessPiece extends React.Component
      */
     componentDidMount () {
         this._isDragging = false;
-        DraggingStore.getInstance().addCursorPositionWatcher(this._cursorPositionChanged);
     }
 
     /**
@@ -39,15 +38,6 @@ export default class ChessPiece extends React.Component
                  onMouseUp={ this._onMouseUp }
             ></div>
         );
-    }
-
-    /**
-     *
-     * @param position
-     * @private
-     */
-    _cursorPositionChanged (position) {
-
     }
 
     /**

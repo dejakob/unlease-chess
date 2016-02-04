@@ -19805,11 +19805,11 @@
 
 	var _chessField2 = _interopRequireDefault(_chessField);
 
-	var _chessPiece = __webpack_require__(162);
+	var _chessPiece = __webpack_require__(182);
 
 	var _chessPiece2 = _interopRequireDefault(_chessPiece);
 
-	var _draggingStore = __webpack_require__(163);
+	var _draggingStore = __webpack_require__(162);
 
 	var _draggingStore2 = _interopRequireDefault(_draggingStore);
 
@@ -19872,28 +19872,44 @@
 	            var fields = [];
 
 	            // TODO clean up
+	            // TODO use constants
 	            for (var i = 0; i < Math.pow(16, 2); i++) {
 	                var row = Math.floor(i / 16);
 	                var column = i % 16;
 	                var background = row % 2 > 0 && column % 2 > 0 || row % 2 === 0 && column % 2 === 0 ? '#ffffff' : '#000000';
 	                var fieldKey = 'field' + i;
 
+	                // TODO make iterator component
 	                if (row === 0 && column === 0) {
 	                    fields.push(React.createElement(
 	                        _chessField2.default,
-	                        { background: background, key: fieldKey },
+	                        {
+	                            background: background,
+	                            key: fieldKey,
+	                            row: row,
+	                            column: column,
+	                            size: 50
+	                        },
 	                        React.createElement(_chessPiece2.default, null)
 	                    ));
 	                } else {
-	                    fields.push(React.createElement(_chessField2.default, { background: background, key: fieldKey }));
+	                    fields.push(React.createElement(_chessField2.default, {
+	                        background: background,
+	                        key: fieldKey,
+	                        row: row,
+	                        column: column,
+	                        size: 50
+	                    }));
 	                }
 	            }
 
 	            return React.createElement(
 	                'div',
-	                { style: style,
+	                {
+	                    style: style,
 	                    onMouseUp: this._onMouseUp,
-	                    onMouseMove: this._onMouseMove },
+	                    onMouseMove: this._onMouseMove
+	                },
 	                fields
 	            );
 	        }
@@ -19906,8 +19922,6 @@
 	    }, {
 	        key: '_draggingStateChanged',
 	        value: function _draggingStateChanged(isDragging) {
-	            console.log('DRAGGING STAAART!', isDragging);
-
 	            // TODO: move this to store and get isDragging with getter
 	            // When doing that, binds can be removed from listeners
 	            this._isDragging = isDragging;
@@ -19955,6 +19969,8 @@
 
 	'use strict';
 
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	Object.defineProperty(exports, "__esModule", {
@@ -19964,6 +19980,12 @@
 	var _react = __webpack_require__(1);
 
 	var React = _interopRequireWildcard(_react);
+
+	var _draggingStore = __webpack_require__(162);
+
+	var _draggingStore2 = _interopRequireDefault(_draggingStore);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -19992,7 +20014,10 @@
 	        /**
 	         * When the component gets activated
 	         */
-	        value: function componentDidMount() {}
+	        value: function componentDidMount() {
+	            this.originalBackground = this.props.background;
+	            _draggingStore2.default.getInstance().addCursorPositionWatcher(this._cursorPositionChanged.bind(this));
+	        }
 
 	        /**
 	         * Just before deactivating the component
@@ -20011,9 +20036,15 @@
 	        value: function render() {
 	            // TODO default value with constants
 	            var background = this.props.background;
-	            var height = '50px';
-	            var width = '50px';
+	            var height = this.props.size + 'px';
+	            var width = this.props.size + 'px';
 	            var float = 'left';
+
+	            if (_typeof(this.state) === 'object' && this.state !== null && this.state.active === true) {
+	                background = 'green';
+	            }
+
+	            console.log('STATE', this.props.row, this.props.column, this.state);
 
 	            var style = {
 	                background: background, height: height, width: width, float: float
@@ -20024,6 +20055,24 @@
 	                { style: style },
 	                this.props.children
 	            );
+	        }
+
+	        /**
+	         *
+	         * @param position
+	         * @private
+	         */
+
+	    }, {
+	        key: '_cursorPositionChanged',
+	        value: function _cursorPositionChanged(position) {
+	            var top = this.props.row * this.props.size;
+	            var left = this.props.column * this.props.size;
+	            var bottom = top + this.props.size;
+	            var right = left + this.props.size;
+	            var active = position.x > left && position.x < right && position.y > top && position.y < bottom;
+
+	            this.setState({ active: active });
 	        }
 	    }]);
 
@@ -20041,135 +20090,14 @@
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var React = _interopRequireWildcard(_react);
-
-	var _draggingStore = __webpack_require__(163);
-
-	var _draggingStore2 = _interopRequireDefault(_draggingStore);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * ChessPiece class
-	 */
-
-	var ChessPiece = function (_React$Component) {
-	  _inherits(ChessPiece, _React$Component);
-
-	  function ChessPiece() {
-	    _classCallCheck(this, ChessPiece);
-
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(ChessPiece).apply(this, arguments));
-	  }
-
-	  _createClass(ChessPiece, [{
-	    key: 'componentDidMount',
-
-	    /**
-	     * When the component gets activated
-	     */
-	    value: function componentDidMount() {
-	      this._isDragging = false;
-	      _draggingStore2.default.getInstance().addCursorPositionWatcher(this._cursorPositionChanged);
-	    }
-
-	    /**
-	     * Just before deactivating the component
-	     */
-
-	  }, {
-	    key: 'componentWillUnmount',
-	    value: function componentWillUnmount() {}
-
-	    /**
-	     * Render the component
-	     */
-
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var size = '50px';
-	      var style = {
-	        height: size,
-	        width: size,
-	        borderRadius: '50% 50%',
-	        backgroundColor: '#ff0000'
-	      };
-
-	      return React.createElement('div', { style: style,
-	        onMouseDown: this._onMouseDown,
-	        onMouseUp: this._onMouseUp
-	      });
-	    }
-
-	    /**
-	     *
-	     * @param position
-	     * @private
-	     */
-
-	  }, {
-	    key: '_cursorPositionChanged',
-	    value: function _cursorPositionChanged(position) {}
-
-	    /**
-	     * on mouse down on the chess piece
-	     * @private
-	     */
-
-	  }, {
-	    key: '_onMouseDown',
-	    value: function _onMouseDown() {
-	      _draggingStore2.default.getInstance().emitDraggingChange(true);
-	    }
-
-	    /**
-	     * on mouse up on the chess piece
-	     * @private
-	     */
-
-	  }, {
-	    key: '_onMouseUp',
-	    value: function _onMouseUp() {
-	      _draggingStore2.default.getInstance().emitDraggingChange(false);
-	    }
-	  }]);
-
-	  return ChessPiece;
-	}(React.Component);
-
-	exports.default = ChessPiece;
-
-/***/ },
-/* 163 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
 
-	var _draggingDispatcher = __webpack_require__(164);
+	var _draggingDispatcher = __webpack_require__(163);
 
 	var _draggingDispatcher2 = _interopRequireDefault(_draggingDispatcher);
 
-	var _eventEmitter = __webpack_require__(168);
+	var _eventEmitter = __webpack_require__(167);
 
 	var _eventEmitter2 = _interopRequireDefault(_eventEmitter);
 
@@ -20223,7 +20151,7 @@
 	         * @param {Object} position
 	         */
 	        function emitCursorPositionChange(position) {
-	            vm.emit(IS_DRAGGING_CHANGED, position);
+	            vm.emit(CURSOR_POSITION_CHANGED, position);
 	        }
 
 	        /**
@@ -20300,7 +20228,7 @@
 	exports.default = DraggingStore;
 
 /***/ },
-/* 164 */
+/* 163 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20311,7 +20239,7 @@
 	    value: true
 	});
 
-	var _flux = __webpack_require__(165);
+	var _flux = __webpack_require__(164);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -20374,7 +20302,7 @@
 	exports.default = DraggingDispatcher;
 
 /***/ },
-/* 165 */
+/* 164 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20388,10 +20316,10 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 
-	module.exports.Dispatcher = __webpack_require__(166);
+	module.exports.Dispatcher = __webpack_require__(165);
 
 /***/ },
-/* 166 */
+/* 165 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -20417,7 +20345,7 @@
 	  }
 	}
 
-	var invariant = __webpack_require__(167);
+	var invariant = __webpack_require__(166);
 
 	var _prefix = 'ID_';
 
@@ -20632,7 +20560,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 167 */
+/* 166 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -20687,15 +20615,15 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 168 */
+/* 167 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
-	var d = __webpack_require__(169),
-	    callable = __webpack_require__(182),
+	var d = __webpack_require__(168),
+	    callable = __webpack_require__(181),
 	    apply = Function.prototype.apply,
 	    call = Function.prototype.call,
 	    create = Object.create,
@@ -20827,15 +20755,15 @@
 	exports.methods = methods;
 
 /***/ },
-/* 169 */
+/* 168 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var assign = __webpack_require__(170),
-	    normalizeOpts = __webpack_require__(177),
-	    isCallable = __webpack_require__(178),
-	    contains = __webpack_require__(179),
+	var assign = __webpack_require__(169),
+	    normalizeOpts = __webpack_require__(176),
+	    isCallable = __webpack_require__(177),
+	    contains = __webpack_require__(178),
 	    d;
 
 	d = module.exports = function (dscr, value /*, options*/) {
@@ -20894,15 +20822,15 @@
 	};
 
 /***/ },
-/* 170 */
+/* 169 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	module.exports = __webpack_require__(171)() ? Object.assign : __webpack_require__(172);
+	module.exports = __webpack_require__(170)() ? Object.assign : __webpack_require__(171);
 
 /***/ },
-/* 171 */
+/* 170 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -20917,13 +20845,13 @@
 	};
 
 /***/ },
-/* 172 */
+/* 171 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var keys = __webpack_require__(173),
-	    value = __webpack_require__(176),
+	var keys = __webpack_require__(172),
+	    value = __webpack_require__(175),
 	    max = Math.max;
 
 	module.exports = function (dest, src /*, …srcn*/) {
@@ -20948,15 +20876,15 @@
 	};
 
 /***/ },
-/* 173 */
+/* 172 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	module.exports = __webpack_require__(174)() ? Object.keys : __webpack_require__(175);
+	module.exports = __webpack_require__(173)() ? Object.keys : __webpack_require__(174);
 
 /***/ },
-/* 174 */
+/* 173 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -20971,7 +20899,7 @@
 	};
 
 /***/ },
-/* 175 */
+/* 174 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -20983,7 +20911,7 @@
 	};
 
 /***/ },
-/* 176 */
+/* 175 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -20994,7 +20922,7 @@
 	};
 
 /***/ },
-/* 177 */
+/* 176 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21019,7 +20947,7 @@
 	};
 
 /***/ },
-/* 178 */
+/* 177 */
 /***/ function(module, exports) {
 
 	// Deprecated
@@ -21031,15 +20959,15 @@
 	};
 
 /***/ },
-/* 179 */
+/* 178 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	module.exports = __webpack_require__(180)() ? String.prototype.contains : __webpack_require__(181);
+	module.exports = __webpack_require__(179)() ? String.prototype.contains : __webpack_require__(180);
 
 /***/ },
-/* 180 */
+/* 179 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21052,7 +20980,7 @@
 	};
 
 /***/ },
-/* 181 */
+/* 180 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21064,7 +20992,7 @@
 	};
 
 /***/ },
-/* 182 */
+/* 181 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21073,6 +21001,116 @@
 		if (typeof fn !== 'function') throw new TypeError(fn + " is not a function");
 		return fn;
 	};
+
+/***/ },
+/* 182 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var React = _interopRequireWildcard(_react);
+
+	var _draggingStore = __webpack_require__(162);
+
+	var _draggingStore2 = _interopRequireDefault(_draggingStore);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * ChessPiece class
+	 */
+
+	var ChessPiece = function (_React$Component) {
+	    _inherits(ChessPiece, _React$Component);
+
+	    function ChessPiece() {
+	        _classCallCheck(this, ChessPiece);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(ChessPiece).apply(this, arguments));
+	    }
+
+	    _createClass(ChessPiece, [{
+	        key: 'componentDidMount',
+
+	        /**
+	         * When the component gets activated
+	         */
+	        value: function componentDidMount() {
+	            this._isDragging = false;
+	        }
+
+	        /**
+	         * Just before deactivating the component
+	         */
+
+	    }, {
+	        key: 'componentWillUnmount',
+	        value: function componentWillUnmount() {}
+
+	        /**
+	         * Render the component
+	         */
+
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var size = '50px';
+	            var style = {
+	                height: size,
+	                width: size,
+	                borderRadius: '50% 50%',
+	                backgroundColor: '#ff0000'
+	            };
+
+	            return React.createElement('div', { style: style,
+	                onMouseDown: this._onMouseDown,
+	                onMouseUp: this._onMouseUp
+	            });
+	        }
+
+	        /**
+	         * on mouse down on the chess piece
+	         * @private
+	         */
+
+	    }, {
+	        key: '_onMouseDown',
+	        value: function _onMouseDown() {
+	            _draggingStore2.default.getInstance().emitDraggingChange(true);
+	        }
+
+	        /**
+	         * on mouse up on the chess piece
+	         * @private
+	         */
+
+	    }, {
+	        key: '_onMouseUp',
+	        value: function _onMouseUp() {
+	            _draggingStore2.default.getInstance().emitDraggingChange(false);
+	        }
+	    }]);
+
+	    return ChessPiece;
+	}(React.Component);
+
+	exports.default = ChessPiece;
 
 /***/ }
 /******/ ]);

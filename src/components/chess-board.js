@@ -37,6 +37,7 @@ export default class ChessBoard extends React.Component
         const fields = [];
 
         // TODO clean up
+        // TODO use constants
         for (let i = 0; i < Math.pow(16, 2); i++) {
             const row = Math.floor(i / 16);
             const column = i % 16;
@@ -48,24 +49,39 @@ export default class ChessBoard extends React.Component
                 '#000000';
             const fieldKey = `field${i}`;
 
+            // TODO make iterator component
             if (row === 0 && column === 0) {
                 fields.push(
-                    <ChessField background={ background } key={ fieldKey }>
+                    <ChessField
+                      background={ background }
+                      key={ fieldKey }
+                      row={ row }
+                      column={ column }
+                      size={ 50 }
+                    >
                         <ChessPiece />
                     </ChessField>
                 );
             }
             else {
                 fields.push(
-                    <ChessField background={ background } key={ fieldKey } />
+                    <ChessField
+                      background={ background }
+                      key={ fieldKey }
+                      row={ row }
+                      column={ column }
+                      size={ 50 }
+                    />
                 );
             }
         }
 
         return (
-            <div style={ style }
-                 onMouseUp={ this._onMouseUp }
-                 onMouseMove={ this._onMouseMove }>
+            <div
+              style={ style }
+              onMouseUp={ this._onMouseUp }
+              onMouseMove={ this._onMouseMove }
+            >
                 { fields }
             </div>
         );
@@ -76,8 +92,6 @@ export default class ChessBoard extends React.Component
      * @private
      */
     _draggingStateChanged (isDragging) {
-        console.log('DRAGGING STAAART!', isDragging);
-
         // TODO: move this to store and get isDragging with getter
         // When doing that, binds can be removed from listeners
         this._isDragging = isDragging;
