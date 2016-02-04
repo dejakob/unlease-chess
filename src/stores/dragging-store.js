@@ -2,6 +2,7 @@ import DraggingDispatcher from '../dispatcher/dragging-dispatcher';
 import EventEmitter from 'event-emitter';
 
 const IS_DRAGGING_CHANGED = 'isDraggingChanged';
+const CURSOR_POSITION_CHANGED = 'cursorPositionChanged';
 let _draggingStoreInstance = null;
 
 /**
@@ -19,16 +20,28 @@ export default class DraggingStore extends EventEmitter
 
         return {
             _draggingDispatcher: new DraggingDispatcher(),
+            _isDragging: false,
+
             getIsDragging,
             emitDraggingChange,
+            emitCursorPositionChange,
             addIsDraggingWatcher,
+            addCursorPositionWatcher,
             removeChangeListener,
             dispatcherIndex
         };
 
         /**
-         * Get the dragging status
-         * @return {object}
+         * Emit dragging change
+         * @param {Object} position
+         */
+        function emitCursorPositionChange (position) {
+            vm.emit(IS_DRAGGING_CHANGED, position);
+        }
+
+        /**
+         * Get the dragging state
+         * @returns {Boolean}
          */
         function getIsDragging () {
             return this._isDragging;
@@ -39,6 +52,7 @@ export default class DraggingStore extends EventEmitter
          * @param {Boolean} isDragging
          */
         function emitDraggingChange (isDragging) {
+            this._isDragging = isDragging;
             vm.emit(IS_DRAGGING_CHANGED, isDragging);
         }
 
@@ -47,6 +61,14 @@ export default class DraggingStore extends EventEmitter
          */
         function addIsDraggingWatcher (callback) {
             vm.on(IS_DRAGGING_CHANGED, callback);
+        }
+
+        /**
+         *
+         * @param {Function} callback
+         */
+        function addCursorPositionWatcher (callback) {
+            vm.on(CURSOR_POSITION_CHANGED, callback);
         }
 
         /**

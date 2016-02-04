@@ -10,7 +10,8 @@ export default class ChessPiece extends React.Component
      * When the component gets activated
      */
     componentDidMount () {
-
+        this._isDragging = false;
+        DraggingStore.getInstance().addCursorPositionWatcher(this._cursorPositionChanged);
     }
 
     /**
@@ -33,12 +34,35 @@ export default class ChessPiece extends React.Component
         };
 
         return (
-            <div style={style} onMouseDown={this._onMouseDown}></div>
+            <div style={ style }
+                 onMouseDown={ this._onMouseDown }
+                 onMouseUp={ this._onMouseUp }
+            ></div>
         );
     }
 
-    _onMouseDown (event) {
-        // Fire to set isDragging
+    /**
+     *
+     * @param position
+     * @private
+     */
+    _cursorPositionChanged (position) {
+
+    }
+
+    /**
+     * on mouse down on the chess piece
+     * @private
+     */
+    _onMouseDown () {
         DraggingStore.getInstance().emitDraggingChange(true);
+    }
+
+    /**
+     * on mouse up on the chess piece
+     * @private
+     */
+    _onMouseUp () {
+        DraggingStore.getInstance().emitDraggingChange(false);
     }
 }

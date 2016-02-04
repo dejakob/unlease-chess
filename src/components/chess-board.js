@@ -13,10 +13,7 @@ export default class ChessBoard extends React.Component
      */
     componentDidMount () {
         this._isDragging = false;
-
-        console.log('DraggingStore instance', DraggingStore.getInstance());
-
-        DraggingStore.getInstance().addIsDraggingWatcher(this._draggingStart);
+        DraggingStore.getInstance().addIsDraggingWatcher(this._draggingStateChanged);
     }
 
     /**
@@ -39,6 +36,7 @@ export default class ChessBoard extends React.Component
 
         const fields = [];
 
+        // TODO clean up
         for (let i = 0; i < Math.pow(16, 2); i++) {
             const row = Math.floor(i / 16);
             const column = i % 16;
@@ -52,20 +50,22 @@ export default class ChessBoard extends React.Component
 
             if (row === 0 && column === 0) {
                 fields.push(
-                    <ChessField background={background} key={fieldKey}>
+                    <ChessField background={ background } key={ fieldKey }>
                         <ChessPiece />
                     </ChessField>
                 );
             }
             else {
                 fields.push(
-                    <ChessField background={background} key={fieldKey} />
+                    <ChessField background={ background } key={ fieldKey } />
                 );
             }
         }
 
         return (
-            <div style={style}>
+            <div style={ style }
+                 onMouseUp={ this._onMouseUp }
+                 onMouseMove={ this._onMouseMove }>
                 { fields }
             </div>
         );
@@ -75,15 +75,35 @@ export default class ChessBoard extends React.Component
      * Start the dragging
      * @private
      */
-    _draggingStart (isDragging) {
+    _draggingStateChanged (isDragging) {
         console.log('DRAGGING STAAART!', isDragging);
 
         // TODO: move this to store and get isDragging with getter
-        this._isDragging = true;
+        // When doing that, binds can be removed from listeners
+        this._isDragging = isDragging;
     }
 
+    /**
+     * Mouse up on chess board
+     * @private
+     */
     _onMouseUp () {
-        DraggingStore.getInstance().emitDraggingChange();
+        DraggingStore.getInstance().emitDraggingChange(false);
+    }
 
+    /**
+     * When moving the mouse over the chess board
+     * @param {MouseEvent} event
+     * @private
+     */
+    _onMouseMove (event) {
+        const data = {
+            x: event.clientX,
+            y: event.clientY
+        };
+
+        if (DraggingStore.getInstance().getIsDragging() === true) {
+            DraggingStore.getInstance().emitCursorPositionChange(data);
+        }
     }
 }

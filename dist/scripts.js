@@ -19844,10 +19844,7 @@
 	         */
 	        value: function componentDidMount() {
 	            this._isDragging = false;
-
-	            console.log('DraggingStore instance', _draggingStore2.default.getInstance());
-
-	            _draggingStore2.default.getInstance().addIsDraggingWatcher(this._draggingStart);
+	            _draggingStore2.default.getInstance().addIsDraggingWatcher(this._draggingStateChanged);
 	        }
 
 	        /**
@@ -19874,6 +19871,7 @@
 
 	            var fields = [];
 
+	            // TODO clean up
 	            for (var i = 0; i < Math.pow(16, 2); i++) {
 	                var row = Math.floor(i / 16);
 	                var column = i % 16;
@@ -19893,7 +19891,9 @@
 
 	            return React.createElement(
 	                'div',
-	                { style: style },
+	                { style: style,
+	                    onMouseUp: this._onMouseUp,
+	                    onMouseMove: this._onMouseMove },
 	                fields
 	            );
 	        }
@@ -19904,17 +19904,43 @@
 	         */
 
 	    }, {
-	        key: '_draggingStart',
-	        value: function _draggingStart(isDragging) {
+	        key: '_draggingStateChanged',
+	        value: function _draggingStateChanged(isDragging) {
 	            console.log('DRAGGING STAAART!', isDragging);
 
 	            // TODO: move this to store and get isDragging with getter
-	            this._isDragging = true;
+	            // When doing that, binds can be removed from listeners
+	            this._isDragging = isDragging;
 	        }
+
+	        /**
+	         * Mouse up on chess board
+	         * @private
+	         */
+
 	    }, {
 	        key: '_onMouseUp',
 	        value: function _onMouseUp() {
-	            _draggingStore2.default.getInstance().emitDraggingChange();
+	            _draggingStore2.default.getInstance().emitDraggingChange(false);
+	        }
+
+	        /**
+	         * When moving the mouse over the chess board
+	         * @param {MouseEvent} event
+	         * @private
+	         */
+
+	    }, {
+	        key: '_onMouseMove',
+	        value: function _onMouseMove(event) {
+	            var data = {
+	                x: event.clientX,
+	                y: event.clientY
+	            };
+
+	            if (_draggingStore2.default.getInstance().getIsDragging() === true) {
+	                _draggingStore2.default.getInstance().emitCursorPositionChange(data);
+	            }
 	        }
 	    }]);
 
@@ -20015,7 +20041,7 @@
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 
 	var _react = __webpack_require__(1);
@@ -20041,56 +20067,88 @@
 	 */
 
 	var ChessPiece = function (_React$Component) {
-	    _inherits(ChessPiece, _React$Component);
+	  _inherits(ChessPiece, _React$Component);
 
-	    function ChessPiece() {
-	        _classCallCheck(this, ChessPiece);
+	  function ChessPiece() {
+	    _classCallCheck(this, ChessPiece);
 
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(ChessPiece).apply(this, arguments));
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(ChessPiece).apply(this, arguments));
+	  }
+
+	  _createClass(ChessPiece, [{
+	    key: 'componentDidMount',
+
+	    /**
+	     * When the component gets activated
+	     */
+	    value: function componentDidMount() {
+	      this._isDragging = false;
+	      _draggingStore2.default.getInstance().addCursorPositionWatcher(this._cursorPositionChanged);
 	    }
 
-	    _createClass(ChessPiece, [{
-	        key: 'componentDidMount',
+	    /**
+	     * Just before deactivating the component
+	     */
 
-	        /**
-	         * When the component gets activated
-	         */
-	        value: function componentDidMount() {}
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {}
 
-	        /**
-	         * Just before deactivating the component
-	         */
+	    /**
+	     * Render the component
+	     */
 
-	    }, {
-	        key: 'componentWillUnmount',
-	        value: function componentWillUnmount() {}
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var size = '50px';
+	      var style = {
+	        height: size,
+	        width: size,
+	        borderRadius: '50% 50%',
+	        backgroundColor: '#ff0000'
+	      };
 
-	        /**
-	         * Render the component
-	         */
+	      return React.createElement('div', { style: style,
+	        onMouseDown: this._onMouseDown,
+	        onMouseUp: this._onMouseUp
+	      });
+	    }
 
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var size = '50px';
-	            var style = {
-	                height: size,
-	                width: size,
-	                borderRadius: '50% 50%',
-	                backgroundColor: '#ff0000'
-	            };
+	    /**
+	     *
+	     * @param position
+	     * @private
+	     */
 
-	            return React.createElement('div', { style: style, onMouseDown: this._onMouseDown });
-	        }
-	    }, {
-	        key: '_onMouseDown',
-	        value: function _onMouseDown(event) {
-	            // Fire to set isDragging
-	            _draggingStore2.default.getInstance().emitDraggingChange(true);
-	        }
-	    }]);
+	  }, {
+	    key: '_cursorPositionChanged',
+	    value: function _cursorPositionChanged(position) {}
 
-	    return ChessPiece;
+	    /**
+	     * on mouse down on the chess piece
+	     * @private
+	     */
+
+	  }, {
+	    key: '_onMouseDown',
+	    value: function _onMouseDown() {
+	      _draggingStore2.default.getInstance().emitDraggingChange(true);
+	    }
+
+	    /**
+	     * on mouse up on the chess piece
+	     * @private
+	     */
+
+	  }, {
+	    key: '_onMouseUp',
+	    value: function _onMouseUp() {
+	      _draggingStore2.default.getInstance().emitDraggingChange(false);
+	    }
+	  }]);
+
+	  return ChessPiece;
 	}(React.Component);
 
 	exports.default = ChessPiece;
@@ -20124,6 +20182,7 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var IS_DRAGGING_CHANGED = 'isDraggingChanged';
+	var CURSOR_POSITION_CHANGED = 'cursorPositionChanged';
 	var _draggingStoreInstance = null;
 
 	/**
@@ -20148,16 +20207,28 @@
 
 	        return _ret = {
 	            _draggingDispatcher: new _draggingDispatcher2.default(),
+	            _isDragging: false,
+
 	            getIsDragging: getIsDragging,
 	            emitDraggingChange: emitDraggingChange,
+	            emitCursorPositionChange: emitCursorPositionChange,
 	            addIsDraggingWatcher: addIsDraggingWatcher,
+	            addCursorPositionWatcher: addCursorPositionWatcher,
 	            removeChangeListener: removeChangeListener,
 	            dispatcherIndex: dispatcherIndex
 	        }, _possibleConstructorReturn(_this, _ret);
 
 	        /**
-	         * Get the dragging status
-	         * @return {object}
+	         * Emit dragging change
+	         * @param {Object} position
+	         */
+	        function emitCursorPositionChange(position) {
+	            vm.emit(IS_DRAGGING_CHANGED, position);
+	        }
+
+	        /**
+	         * Get the dragging state
+	         * @returns {Boolean}
 	         */
 	        function getIsDragging() {
 	            return this._isDragging;
@@ -20168,6 +20239,7 @@
 	         * @param {Boolean} isDragging
 	         */
 	        function emitDraggingChange(isDragging) {
+	            this._isDragging = isDragging;
 	            vm.emit(IS_DRAGGING_CHANGED, isDragging);
 	        }
 
@@ -20176,6 +20248,14 @@
 	         */
 	        function addIsDraggingWatcher(callback) {
 	            vm.on(IS_DRAGGING_CHANGED, callback);
+	        }
+
+	        /**
+	         *
+	         * @param {Function} callback
+	         */
+	        function addCursorPositionWatcher(callback) {
+	            vm.on(CURSOR_POSITION_CHANGED, callback);
 	        }
 
 	        /**
