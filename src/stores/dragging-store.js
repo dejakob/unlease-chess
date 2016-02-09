@@ -22,9 +22,13 @@ export default class DraggingStore extends EventEmitter
             _draggingDispatcher: new DraggingDispatcher(),
             _isDragging: false,
             _position: { top: 0, left: 0 },
+            _currentField: [0, 0],
 
             getIsDragging,
             getCurrentPosition,
+            getCurrentField,
+
+            setCurrentField,
 
             emitDraggingChange,
             emitCursorPositionChange,
@@ -60,6 +64,21 @@ export default class DraggingStore extends EventEmitter
          */
         function getCurrentPosition () {
             return this._position;
+        }
+
+        /**
+         * @returns {*}
+         */
+        function getCurrentField () {
+            return this._currentField;
+        }
+
+        /**
+         *
+         * @param field
+         */
+        function setCurrentField (field) {
+            this._currentField = field;
         }
 
         /**

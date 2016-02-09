@@ -12,16 +12,21 @@ export default class ChessPiecePreview extends ChessPiece
      */
     constructor () {
         super();
-
-        this.state = { x: 0, y: 0 };
+        this.state = DraggingStore.getInstance().getCurrentPosition();
     }
 
     /**
      * When the component mounts
      */
     componentDidMount () {
+        console.log('MOUNT');
+
         DraggingStore.getInstance()
             .addCursorPositionWatcher(this._onCursorPositionChanged.bind(this));
+        DraggingStore.getInstance()
+            .addIsDraggingWatcher(isDragging => {
+                console.log('dragging', isDragging);
+            });
     }
 
     /**

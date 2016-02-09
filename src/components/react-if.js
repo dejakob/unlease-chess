@@ -18,7 +18,7 @@ export default class ReactIf extends React.Component
             display: this.props.condition === true ? 'block' : 'none'
         };
 
-        if (this.props.condition === true) {
+        if (this.props.condition) {
             return this.props.children;
         }
 

@@ -2,6 +2,7 @@ import * as React from 'react';
 import ChessField from './chess-field';
 import ChessPiece from './chess-piece';
 import DraggingStore from '../stores/dragging-store';
+import If from './react-if';
 import { STYLE } from '../constants/style';
 
 /**
@@ -51,32 +52,23 @@ export default class ChessBoard extends React.Component
                 STYLE.CHESS_FIELD.COLORS.LIGHT :
                 STYLE.CHESS_FIELD.COLORS.DARK;
             const fieldKey = `field${i}`;
+            const hasPiece = DraggingStore.getInstance().getCurrentField()[0] === row &&
+                DraggingStore.getInstance().getCurrentField()[1] === column;
 
             // TODO make iterator component
-            if (row === 0 && column === 0) {
-                fields.push(
-                    <ChessField
-                      background={ background }
-                      key={ fieldKey }
-                      row={ row }
-                      column={ column }
-                      size={ 50 }
-                    >
+            fields.push(
+                <ChessField
+                  background={ background }
+                  key={ fieldKey }
+                  row={ row }
+                  column={ column }
+                  size={ 50 }
+                >
+                    <If condition={hasPiece}>
                         <ChessPiece />
-                    </ChessField>
-                );
-            }
-            else {
-                fields.push(
-                    <ChessField
-                      background={ background }
-                      key={ fieldKey }
-                      row={ row }
-                      column={ column }
-                      size={ 50 }
-                    />
-                );
-            }
+                    </If>
+                </ChessField>
+            );
         }
 
         return (

@@ -19738,7 +19738,7 @@
 
 	var _chessBoard2 = _interopRequireDefault(_chessBoard);
 
-	var _chessPiecePreview = __webpack_require__(184);
+	var _chessPiecePreview = __webpack_require__(185);
 
 	var _chessPiecePreview2 = _interopRequireDefault(_chessPiecePreview);
 
@@ -19746,7 +19746,7 @@
 
 	var _draggingStore2 = _interopRequireDefault(_draggingStore);
 
-	var _reactIf = __webpack_require__(185);
+	var _reactIf = __webpack_require__(184);
 
 	var _reactIf2 = _interopRequireDefault(_reactIf);
 
@@ -19876,7 +19876,7 @@
 
 	var _chessField2 = _interopRequireDefault(_chessField);
 
-	var _chessPiece = __webpack_require__(183);
+	var _chessPiece = __webpack_require__(182);
 
 	var _chessPiece2 = _interopRequireDefault(_chessPiece);
 
@@ -19884,7 +19884,11 @@
 
 	var _draggingStore2 = _interopRequireDefault(_draggingStore);
 
-	var _style = __webpack_require__(182);
+	var _reactIf = __webpack_require__(184);
+
+	var _reactIf2 = _interopRequireDefault(_reactIf);
+
+	var _style = __webpack_require__(183);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -19953,29 +19957,24 @@
 	                var column = i % 16;
 	                var background = row % 2 > 0 && column % 2 > 0 || row % 2 === 0 && column % 2 === 0 ? _style.STYLE.CHESS_FIELD.COLORS.LIGHT : _style.STYLE.CHESS_FIELD.COLORS.DARK;
 	                var fieldKey = 'field' + i;
+	                var hasPiece = _draggingStore2.default.getInstance().getCurrentField()[0] === row && _draggingStore2.default.getInstance().getCurrentField()[1] === column;
 
 	                // TODO make iterator component
-	                if (row === 0 && column === 0) {
-	                    fields.push(React.createElement(
-	                        _chessField2.default,
-	                        {
-	                            background: background,
-	                            key: fieldKey,
-	                            row: row,
-	                            column: column,
-	                            size: 50
-	                        },
-	                        React.createElement(_chessPiece2.default, null)
-	                    ));
-	                } else {
-	                    fields.push(React.createElement(_chessField2.default, {
+	                fields.push(React.createElement(
+	                    _chessField2.default,
+	                    {
 	                        background: background,
 	                        key: fieldKey,
 	                        row: row,
 	                        column: column,
 	                        size: 50
-	                    }));
-	                }
+	                    },
+	                    React.createElement(
+	                        _reactIf2.default,
+	                        { condition: hasPiece },
+	                        React.createElement(_chessPiece2.default, null)
+	                    )
+	                ));
 	            }
 
 	            return React.createElement(
@@ -20040,7 +20039,15 @@
 
 	var _draggingStore2 = _interopRequireDefault(_draggingStore);
 
-	var _style = __webpack_require__(182);
+	var _chessPiece = __webpack_require__(182);
+
+	var _chessPiece2 = _interopRequireDefault(_chessPiece);
+
+	var _reactIf = __webpack_require__(184);
+
+	var _reactIf2 = _interopRequireDefault(_reactIf);
+
+	var _style = __webpack_require__(183);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -20116,7 +20123,9 @@
 
 	            return React.createElement(
 	                'div',
-	                { style: style },
+	                {
+	                    style: style
+	                },
 	                this.props.children
 	            );
 	        }
@@ -20145,6 +20154,11 @@
 	        key: '_isDraggingChanged',
 	        value: function _isDraggingChanged(isDragging) {
 	            if (isDragging === false) {
+	                if (this.state.active) {
+	                    console.log('THIS', this.props);
+	                    _draggingStore2.default.getInstance().setCurrentField([this.props.row, this.props.column]);
+	                }
+
 	                this.setState({ active: false });
 	            }
 	        }
@@ -20211,9 +20225,13 @@
 	            _draggingDispatcher: new _draggingDispatcher2.default(),
 	            _isDragging: false,
 	            _position: { top: 0, left: 0 },
+	            _currentField: [0, 0],
 
 	            getIsDragging: getIsDragging,
 	            getCurrentPosition: getCurrentPosition,
+	            getCurrentField: getCurrentField,
+
+	            setCurrentField: setCurrentField,
 
 	            emitDraggingChange: emitDraggingChange,
 	            emitCursorPositionChange: emitCursorPositionChange,
@@ -20249,6 +20267,21 @@
 	         */
 	        function getCurrentPosition() {
 	            return this._position;
+	        }
+
+	        /**
+	         * @returns {*}
+	         */
+	        function getCurrentField() {
+	            return this._currentField;
+	        }
+
+	        /**
+	         *
+	         * @param field
+	         */
+	        function setCurrentField(field) {
+	            this._currentField = field;
 	        }
 
 	        /**
@@ -21100,31 +21133,6 @@
 
 /***/ },
 /* 182 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	var STYLE = exports.STYLE = {
-	    CHESS_FIELD: {
-	        COLORS: {
-	            ACTIVE: '#A8DAFD',
-	            DARK: '#000000',
-	            LIGHT: '#FFFFFF'
-	        }
-	    },
-	    CHESS_PIECE: {
-	        BACKGROUND: 'url(dist/images/chess-piece.jpg)'
-	    },
-	    CHESS_KING: {
-	        BACKGROUND: 'url(dist/images/chess-king.jpg)'
-	    }
-	};
-
-/***/ },
-/* 183 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21143,7 +21151,7 @@
 
 	var _draggingStore2 = _interopRequireDefault(_draggingStore);
 
-	var _style = __webpack_require__(182);
+	var _style = __webpack_require__(183);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -21239,7 +21247,96 @@
 	exports.default = ChessPiece;
 
 /***/ },
+/* 183 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var STYLE = exports.STYLE = {
+	    CHESS_FIELD: {
+	        COLORS: {
+	            ACTIVE: '#A8DAFD',
+	            DARK: '#000000',
+	            LIGHT: '#FFFFFF'
+	        }
+	    },
+	    CHESS_PIECE: {
+	        BACKGROUND: 'url(dist/images/chess-piece.jpg)'
+	    },
+	    CHESS_KING: {
+	        BACKGROUND: 'url(dist/images/chess-king.jpg)'
+	    }
+	};
+
+/***/ },
 /* 184 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var React = _interopRequireWildcard(_react);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var ReactIf = function (_React$Component) {
+	    _inherits(ReactIf, _React$Component);
+
+	    function ReactIf() {
+	        _classCallCheck(this, ReactIf);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(ReactIf).apply(this, arguments));
+	    }
+
+	    _createClass(ReactIf, [{
+	        key: 'render',
+
+	        /**
+	         * Render method of the if component
+	         * @returns {*}
+	         */
+	        value: function render() {
+	            if (typeof this.props.condition !== 'boolean' || _typeof(this.props.children) !== 'object') {
+	                throw new Error('Please provide a condition and result');
+	            }
+
+	            var style = {
+	                display: this.props.condition === true ? 'block' : 'none'
+	            };
+
+	            if (this.props.condition) {
+	                return this.props.children;
+	            }
+
+	            return null;
+	        }
+	    }]);
+
+	    return ReactIf;
+	}(React.Component);
+
+	exports.default = ReactIf;
+
+/***/ },
+/* 185 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21256,7 +21353,7 @@
 
 	var React = _interopRequireWildcard(_react);
 
-	var _chessPiece = __webpack_require__(183);
+	var _chessPiece = __webpack_require__(182);
 
 	var _chessPiece2 = _interopRequireDefault(_chessPiece);
 
@@ -21290,7 +21387,7 @@
 
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ChessPiecePreview).call(this));
 
-	        _this.state = { x: 0, y: 0 };
+	        _this.state = _draggingStore2.default.getInstance().getCurrentPosition();
 	        return _this;
 	    }
 
@@ -21301,7 +21398,12 @@
 	    _createClass(ChessPiecePreview, [{
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
+	            console.log('MOUNT');
+
 	            _draggingStore2.default.getInstance().addCursorPositionWatcher(this._onCursorPositionChanged.bind(this));
+	            _draggingStore2.default.getInstance().addIsDraggingWatcher(function (isDragging) {
+	                console.log('dragging', isDragging);
+	            });
 	        }
 
 	        /**
@@ -21355,70 +21457,6 @@
 	}(_chessPiece2.default);
 
 	exports.default = ChessPiecePreview;
-
-/***/ },
-/* 185 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var React = _interopRequireWildcard(_react);
-
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var ReactIf = function (_React$Component) {
-	    _inherits(ReactIf, _React$Component);
-
-	    function ReactIf() {
-	        _classCallCheck(this, ReactIf);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(ReactIf).apply(this, arguments));
-	    }
-
-	    _createClass(ReactIf, [{
-	        key: 'render',
-
-	        /**
-	         * Render method of the if component
-	         * @returns {*}
-	         */
-	        value: function render() {
-	            if (typeof this.props.condition !== 'boolean' || _typeof(this.props.children) !== 'object') {
-	                throw new Error('Please provide a condition and result');
-	            }
-
-	            var style = {
-	                display: this.props.condition === true ? 'block' : 'none'
-	            };
-
-	            if (this.props.condition === true) {
-	                return this.props.children;
-	            }
-
-	            return null;
-	        }
-	    }]);
-
-	    return ReactIf;
-	}(React.Component);
-
-	exports.default = ReactIf;
 
 /***/ }
 /******/ ]);

@@ -1,5 +1,7 @@
 import * as React from 'react';
 import DraggingStore from '../stores/dragging-store';
+import ChessPiece from './chess-piece';
+import If from './react-if';
 import { STYLE } from '../constants/style';
 
 /**
@@ -52,7 +54,9 @@ export default class ChessField extends React.Component
         };
 
         return (
-            <div style={ style }>
+            <div
+              style={ style }
+            >
                 {this.props.children}
             </div>
         );
@@ -79,6 +83,13 @@ export default class ChessField extends React.Component
      */
     _isDraggingChanged (isDragging) {
         if (isDragging === false) {
+            if (this.state.active) {
+                console.log('THIS', this.props);
+                DraggingStore.getInstance().setCurrentField([
+                    this.props.row, this.props.column
+                ]);
+            }
+
             this.setState({ active: false });
         }
     }
