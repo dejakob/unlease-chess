@@ -14,14 +14,16 @@ export default class ChessBoard extends React.Component
      */
     componentDidMount () {
         this._isDragging = false;
-        DraggingStore.getInstance().addIsDraggingWatcher(this._draggingStateChanged);
+        DraggingStore.getInstance()
+            .addIsDraggingWatcher(this._draggingStateChanged);
     }
 
     /**
      * Just before deactivating the component
      */
     componentWillUnmount () {
-
+        DraggingStore.getInstance()
+            .removeIsDraggingWatcher(this._draggingStateChanged);
     }
 
     /**
@@ -79,9 +81,8 @@ export default class ChessBoard extends React.Component
 
         return (
             <div
-              style={ style }
+              style={style}
               onMouseUp={ this._onMouseUp }
-              onMouseMove={ this._onMouseMove }
             >
                 { fields }
             </div>
@@ -104,21 +105,5 @@ export default class ChessBoard extends React.Component
      */
     _onMouseUp () {
         DraggingStore.getInstance().emitDraggingChange(false);
-    }
-
-    /**
-     * When moving the mouse over the chess board
-     * @param {MouseEvent} event
-     * @private
-     */
-    _onMouseMove (event) {
-        const data = {
-            x: event.clientX,
-            y: event.clientY
-        };
-
-        if (DraggingStore.getInstance().getIsDragging() === true) {
-            DraggingStore.getInstance().emitCursorPositionChange(data);
-        }
     }
 }

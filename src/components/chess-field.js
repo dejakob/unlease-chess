@@ -17,15 +17,20 @@ export default class ChessField extends React.Component
         this.bottom = this.top + this.props.size;
         this.right = this.left + this.props.size;
 
-        DraggingStore.getInstance().addCursorPositionWatcher(this._cursorPositionChanged.bind(this));
-        DraggingStore.getInstance().addIsDraggingWatcher(this._isDraggingChanged.bind(this));
+        DraggingStore.getInstance()
+            .addCursorPositionWatcher(this._cursorPositionChanged.bind(this));
+        DraggingStore.getInstance()
+            .addIsDraggingWatcher(this._isDraggingChanged.bind(this));
     }
 
     /**
      * Just before deactivating the component
      */
     componentWillUnmount () {
-
+        DraggingStore.getInstance()
+            .removeCursorPositionWatcher(this._cursorPositionChanged.bind(this));
+        DraggingStore.getInstance()
+            .removeIsDraggingWatcher(this._isDraggingChanged.bind(this));
     }
 
     /**

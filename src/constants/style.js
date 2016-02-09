@@ -8,5 +8,8 @@ export const STYLE = {
     },
     CHESS_PIECE: {
         BACKGROUND: 'url(dist/images/chess-piece.jpg)'
+    },
+    CHESS_KING: {
+        BACKGROUND: 'url(dist/images/chess-king.jpg)'
     }
 };

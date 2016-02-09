@@ -18,19 +18,21 @@ export default class ChessPiece extends React.Component
      * Just before deactivating the component
      */
     componentWillUnmount () {
-
     }
 
     /**
      * Render the component
      */
     render () {
-        const size = '50px';
+        const size = '40px';
         const style = {
             height: size,
             width: size,
             borderRadius: '50% 50%',
-            background: STYLE.CHESS_PIECE.BACKGROUND
+            background: STYLE.CHESS_PIECE.BACKGROUND,
+            backgroundPosition: 'center center',
+            border: '1px #000000 solid',
+            margin: '5px'
         };
 
         return (

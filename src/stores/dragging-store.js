@@ -21,13 +21,20 @@ export default class DraggingStore extends EventEmitter
         return {
             _draggingDispatcher: new DraggingDispatcher(),
             _isDragging: false,
+            _position: { top: 0, left: 0 },
 
             getIsDragging,
+            getCurrentPosition,
+
             emitDraggingChange,
             emitCursorPositionChange,
+
             addIsDraggingWatcher,
             addCursorPositionWatcher,
-            removeChangeListener,
+
+            removeIsDraggingWatcher,
+            removeCursorPositionWatcher,
+
             dispatcherIndex
         };
 
@@ -36,6 +43,7 @@ export default class DraggingStore extends EventEmitter
          * @param {Object} position
          */
         function emitCursorPositionChange (position) {
+            this._position = position;
             vm.emit(CURSOR_POSITION_CHANGED, position);
         }
 
@@ -45,6 +53,13 @@ export default class DraggingStore extends EventEmitter
          */
         function getIsDragging () {
             return this._isDragging;
+        }
+
+        /**
+         * @returns {Object}
+         */
+        function getCurrentPosition () {
+            return this._position;
         }
 
         /**
@@ -64,7 +79,14 @@ export default class DraggingStore extends EventEmitter
         }
 
         /**
-         *
+         * Remove the dragging listener
+         * @param {Function} callback
+         */
+        function removeIsDraggingWatcher (callback) {
+            vm.off(IS_DRAGGING_CHANGED, callback);
+        }
+
+        /**
          * @param {Function} callback
          */
         function addCursorPositionWatcher (callback) {
@@ -74,8 +96,8 @@ export default class DraggingStore extends EventEmitter
         /**
          * @param {Function} callback
          */
-        function removeChangeListener (callback) {
-            vm.removeListener(IS_DRAGGING_CHANGED, callback);
+        function removeCursorPositionWatcher (callback) {
+            vm.off(CURSOR_POSITION_CHANGED, callback);
         }
 
         /**

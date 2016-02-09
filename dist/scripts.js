@@ -62,10 +62,6 @@
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-	console.log('react', React);
-	console.log('Game', _game2.default);
-	console.log('DOM', _reactDom2.default);
-
 	_reactDom2.default.render(React.createElement(_game2.default, null), document.querySelector('main'));
 
 /***/ },
@@ -19742,6 +19738,18 @@
 
 	var _chessBoard2 = _interopRequireDefault(_chessBoard);
 
+	var _chessPiecePreview = __webpack_require__(184);
+
+	var _chessPiecePreview2 = _interopRequireDefault(_chessPiecePreview);
+
+	var _draggingStore = __webpack_require__(162);
+
+	var _draggingStore2 = _interopRequireDefault(_draggingStore);
+
+	var _reactIf = __webpack_require__(185);
+
+	var _reactIf2 = _interopRequireDefault(_reactIf);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -19759,24 +19767,87 @@
 	var Game = function (_React$Component) {
 	    _inherits(Game, _React$Component);
 
+	    /**
+	     * Game constructor
+	     */
+
 	    function Game() {
 	        _classCallCheck(this, Game);
 
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Game).apply(this, arguments));
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Game).call(this));
+
+	        _this.state = { showPiecePreview: false };
+	        return _this;
 	    }
 
+	    /**
+	     * When the component mounted
+	     */
+
 	    _createClass(Game, [{
-	        key: 'render',
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            _draggingStore2.default.getInstance().addIsDraggingWatcher(this._changePreviewVisibility.bind(this));
+	        }
+
+	        /**
+	         * When the component unmounts
+	         */
+
+	    }, {
+	        key: 'componentWillUnmount',
+	        value: function componentWillUnmount() {
+	            _draggingStore2.default.getInstance().removeIsDraggingWatcher(this._changePreviewVisibility.bind(this));
+	        }
 
 	        /**
 	         * Render the game
 	         */
+
+	    }, {
+	        key: 'render',
 	        value: function render() {
 	            return React.createElement(
 	                'div',
-	                null,
-	                React.createElement(_chessBoard2.default, null)
+	                { onMouseMove: this._onMouseMove },
+	                React.createElement(_chessBoard2.default, null),
+	                React.createElement(
+	                    _reactIf2.default,
+	                    { condition: this.state.showPiecePreview === true },
+	                    React.createElement(_chessPiecePreview2.default, null)
+	                )
 	            );
+	        }
+
+	        /**
+	         * When moving the mouse over the chess board
+	         * @param {MouseEvent} event
+	         * @private
+	         */
+
+	    }, {
+	        key: '_onMouseMove',
+	        value: function _onMouseMove(event) {
+	            var data = {
+	                x: event.clientX,
+	                y: event.clientY
+	            };
+
+	            if (_draggingStore2.default.getInstance().getIsDragging() === true) {
+	                _draggingStore2.default.getInstance().emitCursorPositionChange(data);
+	            }
+	        }
+
+	        /**
+	         * When isDragging changes
+	         * @param {Boolean} showPiecePreview
+	         * @private
+	         */
+
+	    }, {
+	        key: '_changePreviewVisibility',
+	        value: function _changePreviewVisibility(showPiecePreview) {
+	            this.setState({ showPiecePreview: showPiecePreview });
 	        }
 	    }]);
 
@@ -19855,7 +19926,9 @@
 
 	    }, {
 	        key: 'componentWillUnmount',
-	        value: function componentWillUnmount() {}
+	        value: function componentWillUnmount() {
+	            _draggingStore2.default.getInstance().removeIsDraggingWatcher(this._draggingStateChanged);
+	        }
 
 	        /**
 	         * Render the component
@@ -19909,8 +19982,7 @@
 	                'div',
 	                {
 	                    style: style,
-	                    onMouseUp: this._onMouseUp,
-	                    onMouseMove: this._onMouseMove
+	                    onMouseUp: this._onMouseUp
 	                },
 	                fields
 	            );
@@ -19938,25 +20010,6 @@
 	        key: '_onMouseUp',
 	        value: function _onMouseUp() {
 	            _draggingStore2.default.getInstance().emitDraggingChange(false);
-	        }
-
-	        /**
-	         * When moving the mouse over the chess board
-	         * @param {MouseEvent} event
-	         * @private
-	         */
-
-	    }, {
-	        key: '_onMouseMove',
-	        value: function _onMouseMove(event) {
-	            var data = {
-	                x: event.clientX,
-	                y: event.clientY
-	            };
-
-	            if (_draggingStore2.default.getInstance().getIsDragging() === true) {
-	                _draggingStore2.default.getInstance().emitCursorPositionChange(data);
-	            }
 	        }
 	    }]);
 
@@ -20035,7 +20088,10 @@
 
 	    }, {
 	        key: 'componentWillUnmount',
-	        value: function componentWillUnmount() {}
+	        value: function componentWillUnmount() {
+	            _draggingStore2.default.getInstance().removeCursorPositionWatcher(this._cursorPositionChanged.bind(this));
+	            _draggingStore2.default.getInstance().removeIsDraggingWatcher(this._isDraggingChanged.bind(this));
+	        }
 
 	        /**
 	         * Render the component
@@ -20154,13 +20210,20 @@
 	        return _ret = {
 	            _draggingDispatcher: new _draggingDispatcher2.default(),
 	            _isDragging: false,
+	            _position: { top: 0, left: 0 },
 
 	            getIsDragging: getIsDragging,
+	            getCurrentPosition: getCurrentPosition,
+
 	            emitDraggingChange: emitDraggingChange,
 	            emitCursorPositionChange: emitCursorPositionChange,
+
 	            addIsDraggingWatcher: addIsDraggingWatcher,
 	            addCursorPositionWatcher: addCursorPositionWatcher,
-	            removeChangeListener: removeChangeListener,
+
+	            removeIsDraggingWatcher: removeIsDraggingWatcher,
+	            removeCursorPositionWatcher: removeCursorPositionWatcher,
+
 	            dispatcherIndex: dispatcherIndex
 	        }, _possibleConstructorReturn(_this, _ret);
 
@@ -20169,6 +20232,7 @@
 	         * @param {Object} position
 	         */
 	        function emitCursorPositionChange(position) {
+	            this._position = position;
 	            vm.emit(CURSOR_POSITION_CHANGED, position);
 	        }
 
@@ -20178,6 +20242,13 @@
 	         */
 	        function getIsDragging() {
 	            return this._isDragging;
+	        }
+
+	        /**
+	         * @returns {Object}
+	         */
+	        function getCurrentPosition() {
+	            return this._position;
 	        }
 
 	        /**
@@ -20197,7 +20268,14 @@
 	        }
 
 	        /**
-	         *
+	         * Remove the dragging listener
+	         * @param {Function} callback
+	         */
+	        function removeIsDraggingWatcher(callback) {
+	            vm.off(IS_DRAGGING_CHANGED, callback);
+	        }
+
+	        /**
 	         * @param {Function} callback
 	         */
 	        function addCursorPositionWatcher(callback) {
@@ -20207,8 +20285,8 @@
 	        /**
 	         * @param {Function} callback
 	         */
-	        function removeChangeListener(callback) {
-	            vm.removeListener(IS_DRAGGING_CHANGED, callback);
+	        function removeCursorPositionWatcher(callback) {
+	            vm.off(CURSOR_POSITION_CHANGED, callback);
 	        }
 
 	        /**
@@ -21039,6 +21117,9 @@
 	    },
 	    CHESS_PIECE: {
 	        BACKGROUND: 'url(dist/images/chess-piece.jpg)'
+	    },
+	    CHESS_KING: {
+	        BACKGROUND: 'url(dist/images/chess-king.jpg)'
 	    }
 	};
 
@@ -21112,12 +21193,15 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var size = '50px';
+	            var size = '40px';
 	            var style = {
 	                height: size,
 	                width: size,
 	                borderRadius: '50% 50%',
-	                background: _style.STYLE.CHESS_PIECE.BACKGROUND
+	                background: _style.STYLE.CHESS_PIECE.BACKGROUND,
+	                backgroundPosition: 'center center',
+	                border: '1px #000000 solid',
+	                margin: '5px'
 	            };
 
 	            return React.createElement('div', { style: style,
@@ -21153,6 +21237,188 @@
 	}(React.Component);
 
 	exports.default = ChessPiece;
+
+/***/ },
+/* 184 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var React = _interopRequireWildcard(_react);
+
+	var _chessPiece = __webpack_require__(183);
+
+	var _chessPiece2 = _interopRequireDefault(_chessPiece);
+
+	var _draggingStore = __webpack_require__(162);
+
+	var _draggingStore2 = _interopRequireDefault(_draggingStore);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * ChessPiecePreview class
+	 */
+
+	var ChessPiecePreview = function (_ChessPiece) {
+	    _inherits(ChessPiecePreview, _ChessPiece);
+
+	    /**
+	     * constructor for ChessPiecePreview
+	     */
+
+	    function ChessPiecePreview() {
+	        _classCallCheck(this, ChessPiecePreview);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ChessPiecePreview).call(this));
+
+	        _this.state = { x: 0, y: 0 };
+	        return _this;
+	    }
+
+	    /**
+	     * When the component mounts
+	     */
+
+	    _createClass(ChessPiecePreview, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            _draggingStore2.default.getInstance().addCursorPositionWatcher(this._onCursorPositionChanged.bind(this));
+	        }
+
+	        /**
+	         * Before the component unmounts
+	         */
+
+	    }, {
+	        key: 'componentWillUnmount',
+	        value: function componentWillUnmount() {
+	            _draggingStore2.default.getInstance().removeCursorPositionWatcher(this._onCursorPositionChanged.bind(this));
+	        }
+
+	        /**
+	         * Render the preview
+	         * @returns {XML}
+	         */
+
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var style = {
+	                position: 'absolute',
+	                top: this.state.y + 'px',
+	                left: this.state.x + 'px',
+	                marginTop: '-25px',
+	                marginLeft: '-25px',
+	                opacity: '0.5'
+	            };
+
+	            return React.createElement(
+	                'div',
+	                { style: style },
+	                _get(Object.getPrototypeOf(ChessPiecePreview.prototype), 'render', this).call(this)
+	            );
+	        }
+
+	        /**
+	         * When the position of the cursor changes over the board
+	         * @param position
+	         * @private
+	         */
+
+	    }, {
+	        key: '_onCursorPositionChanged',
+	        value: function _onCursorPositionChanged(position) {
+	            this.setState(position);
+	        }
+	    }]);
+
+	    return ChessPiecePreview;
+	}(_chessPiece2.default);
+
+	exports.default = ChessPiecePreview;
+
+/***/ },
+/* 185 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var React = _interopRequireWildcard(_react);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var ReactIf = function (_React$Component) {
+	    _inherits(ReactIf, _React$Component);
+
+	    function ReactIf() {
+	        _classCallCheck(this, ReactIf);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(ReactIf).apply(this, arguments));
+	    }
+
+	    _createClass(ReactIf, [{
+	        key: 'render',
+
+	        /**
+	         * Render method of the if component
+	         * @returns {*}
+	         */
+	        value: function render() {
+	            if (typeof this.props.condition !== 'boolean' || _typeof(this.props.children) !== 'object') {
+	                throw new Error('Please provide a condition and result');
+	            }
+
+	            var style = {
+	                display: this.props.condition === true ? 'block' : 'none'
+	            };
+
+	            if (this.props.condition === true) {
+	                return this.props.children;
+	            }
+
+	            return null;
+	        }
+	    }]);
+
+	    return ReactIf;
+	}(React.Component);
+
+	exports.default = ReactIf;
 
 /***/ }
 /******/ ]);
