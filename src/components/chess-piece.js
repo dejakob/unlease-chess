@@ -1,5 +1,5 @@
 import * as React from 'react';
-import DraggingStore from '../stores/dragging-store';
+import Actions from '../actions/dragging-actions';
 import { STYLE } from '../constants/style';
 
 /**
@@ -48,7 +48,7 @@ export default class ChessPiece extends React.Component
      * @private
      */
     _onMouseDown () {
-        DraggingStore.getInstance().emitDraggingChange(true);
+        Actions.changeDragging(true);
     }
 
     /**
@@ -56,6 +56,6 @@ export default class ChessPiece extends React.Component
      * @private
      */
     _onMouseUp () {
-        DraggingStore.getInstance().emitDraggingChange(false);
+        Actions.changeDragging(false);
     }
 }

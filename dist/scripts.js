@@ -19734,19 +19734,23 @@
 
 	var React = _interopRequireWildcard(_react);
 
-	var _chessBoard = __webpack_require__(160);
+	var _draggingActions = __webpack_require__(160);
+
+	var _draggingActions2 = _interopRequireDefault(_draggingActions);
+
+	var _chessBoard = __webpack_require__(165);
 
 	var _chessBoard2 = _interopRequireDefault(_chessBoard);
 
-	var _chessPiecePreview = __webpack_require__(185);
+	var _chessPiecePreview = __webpack_require__(187);
 
 	var _chessPiecePreview2 = _interopRequireDefault(_chessPiecePreview);
 
-	var _draggingStore = __webpack_require__(162);
+	var _draggingStore = __webpack_require__(167);
 
 	var _draggingStore2 = _interopRequireDefault(_draggingStore);
 
-	var _reactIf = __webpack_require__(184);
+	var _reactIf = __webpack_require__(186);
 
 	var _reactIf2 = _interopRequireDefault(_reactIf);
 
@@ -19834,7 +19838,7 @@
 	            };
 
 	            if (_draggingStore2.default.getInstance().getIsDragging() === true) {
-	                _draggingStore2.default.getInstance().emitCursorPositionChange(data);
+	                _draggingActions2.default.changeCursorPosition(data);
 	            }
 	        }
 
@@ -19862,160 +19866,42 @@
 
 	'use strict';
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
 
-	var _react = __webpack_require__(1);
+	var _appDispatcher = __webpack_require__(161);
 
-	var React = _interopRequireWildcard(_react);
-
-	var _chessField = __webpack_require__(161);
-
-	var _chessField2 = _interopRequireDefault(_chessField);
-
-	var _chessPiece = __webpack_require__(182);
-
-	var _chessPiece2 = _interopRequireDefault(_chessPiece);
-
-	var _draggingStore = __webpack_require__(162);
-
-	var _draggingStore2 = _interopRequireDefault(_draggingStore);
-
-	var _reactIf = __webpack_require__(184);
-
-	var _reactIf2 = _interopRequireDefault(_reactIf);
-
-	var _style = __webpack_require__(183);
+	var _appDispatcher2 = _interopRequireDefault(_appDispatcher);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	exports.default = {
+	    /**
+	     * Change isDragging
+	     * @param {Boolean} isDragging
+	     */
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	    changeDragging: function changeDragging(isDragging) {
+	        _appDispatcher2.default.getInstance().handleViewAction({
+	            // TODO constant
+	            actionType: 'isDraggingChanged',
+	            isDragging: isDragging
+	        });
+	    },
 
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * The ChessBoard class
-	 */
-
-	var ChessBoard = function (_React$Component) {
-	    _inherits(ChessBoard, _React$Component);
-
-	    function ChessBoard() {
-	        _classCallCheck(this, ChessBoard);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(ChessBoard).apply(this, arguments));
+	    /**
+	     * Change the cursor position
+	     * @param {Object} position
+	     */
+	    changeCursorPosition: function changeCursorPosition(position) {
+	        _appDispatcher2.default.getInstance().handleViewAction({
+	            // TODO constant
+	            actionType: 'cursorPositionChanged',
+	            position: position
+	        });
 	    }
-
-	    _createClass(ChessBoard, [{
-	        key: 'componentDidMount',
-
-	        /**
-	         * When the component gets activated
-	         */
-	        value: function componentDidMount() {
-	            this._isDragging = false;
-	            _draggingStore2.default.getInstance().addIsDraggingWatcher(this._draggingStateChanged);
-	        }
-
-	        /**
-	         * Just before deactivating the component
-	         */
-
-	    }, {
-	        key: 'componentWillUnmount',
-	        value: function componentWillUnmount() {
-	            _draggingStore2.default.getInstance().removeIsDraggingWatcher(this._draggingStateChanged);
-	        }
-
-	        /**
-	         * Render the component
-	         */
-
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var size = 50 * 16 + 'px';
-	            var style = {
-	                height: size,
-	                width: size,
-	                border: '1px #000000 solid'
-	            };
-
-	            var fields = [];
-
-	            // TODO clean up
-	            // TODO use constants
-	            for (var i = 0; i < Math.pow(16, 2); i++) {
-	                var row = Math.floor(i / 16);
-	                var column = i % 16;
-	                var background = row % 2 > 0 && column % 2 > 0 || row % 2 === 0 && column % 2 === 0 ? _style.STYLE.CHESS_FIELD.COLORS.LIGHT : _style.STYLE.CHESS_FIELD.COLORS.DARK;
-	                var fieldKey = 'field' + i;
-	                var hasPiece = _draggingStore2.default.getInstance().getCurrentField()[0] === row && _draggingStore2.default.getInstance().getCurrentField()[1] === column;
-
-	                // TODO make iterator component
-	                fields.push(React.createElement(
-	                    _chessField2.default,
-	                    {
-	                        background: background,
-	                        key: fieldKey,
-	                        row: row,
-	                        column: column,
-	                        size: 50
-	                    },
-	                    React.createElement(
-	                        _reactIf2.default,
-	                        { condition: hasPiece },
-	                        React.createElement(_chessPiece2.default, null)
-	                    )
-	                ));
-	            }
-
-	            return React.createElement(
-	                'div',
-	                {
-	                    style: style,
-	                    onMouseUp: this._onMouseUp
-	                },
-	                fields
-	            );
-	        }
-
-	        /**
-	         * Start the dragging
-	         * @private
-	         */
-
-	    }, {
-	        key: '_draggingStateChanged',
-	        value: function _draggingStateChanged(isDragging) {
-	            // TODO: move this to store and get isDragging with getter
-	            // When doing that, binds can be removed from listeners
-	            this._isDragging = isDragging;
-	        }
-
-	        /**
-	         * Mouse up on chess board
-	         * @private
-	         */
-
-	    }, {
-	        key: '_onMouseUp',
-	        value: function _onMouseUp() {
-	            _draggingStore2.default.getInstance().emitDraggingChange(false);
-	        }
-	    }]);
-
-	    return ChessBoard;
-	}(React.Component);
-
-	exports.default = ChessBoard;
+	};
 
 /***/ },
 /* 161 */
@@ -20023,35 +19909,13 @@
 
 	'use strict';
 
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
 
-	var _react = __webpack_require__(1);
-
-	var React = _interopRequireWildcard(_react);
-
-	var _draggingStore = __webpack_require__(162);
-
-	var _draggingStore2 = _interopRequireDefault(_draggingStore);
-
-	var _chessPiece = __webpack_require__(182);
-
-	var _chessPiece2 = _interopRequireDefault(_chessPiece);
-
-	var _reactIf = __webpack_require__(184);
-
-	var _reactIf2 = _interopRequireDefault(_reactIf);
-
-	var _style = __webpack_require__(183);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	var _flux = __webpack_require__(162);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -20059,277 +19923,38 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	/**
-	 * The ChessField class
-	 */
-
-	var ChessField = function (_React$Component) {
-	    _inherits(ChessField, _React$Component);
-
-	    function ChessField() {
-	        _classCallCheck(this, ChessField);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(ChessField).apply(this, arguments));
-	    }
-
-	    _createClass(ChessField, [{
-	        key: 'componentDidMount',
-
-	        /**
-	         * When the component gets activated
-	         */
-	        value: function componentDidMount() {
-	            this.originalBackground = this.props.background;
-	            this.top = this.props.row * this.props.size;
-	            this.left = this.props.column * this.props.size;
-	            this.bottom = this.top + this.props.size;
-	            this.right = this.left + this.props.size;
-
-	            _draggingStore2.default.getInstance().addCursorPositionWatcher(this._cursorPositionChanged.bind(this));
-	            _draggingStore2.default.getInstance().addIsDraggingWatcher(this._isDraggingChanged.bind(this));
-	        }
-
-	        /**
-	         * Just before deactivating the component
-	         */
-
-	    }, {
-	        key: 'componentWillUnmount',
-	        value: function componentWillUnmount() {
-	            _draggingStore2.default.getInstance().removeCursorPositionWatcher(this._cursorPositionChanged.bind(this));
-	            _draggingStore2.default.getInstance().removeIsDraggingWatcher(this._isDraggingChanged.bind(this));
-	        }
-
-	        /**
-	         * Render the component
-	         */
-
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            // TODO default value with constants
-	            var background = this.props.background;
-	            var height = this.props.size + 'px';
-	            var width = this.props.size + 'px';
-	            var float = 'left';
-
-	            if (_typeof(this.state) === 'object' && this.state !== null && this.state.active === true) {
-	                background = _style.STYLE.CHESS_FIELD.COLORS.ACTIVE;
-	            }
-
-	            var style = {
-	                background: background, height: height, width: width, float: float
-	            };
-
-	            return React.createElement(
-	                'div',
-	                {
-	                    style: style
-	                },
-	                this.props.children
-	            );
-	        }
-
-	        /**
-	         *
-	         * @param position
-	         * @private
-	         */
-
-	    }, {
-	        key: '_cursorPositionChanged',
-	        value: function _cursorPositionChanged(position) {
-	            var active = position.x > this.left && position.x < this.right && position.y > this.top && position.y < this.bottom;
-
-	            this.setState({ active: active });
-	        }
-
-	        /**
-	         *
-	         * @param {Boolean} isDragging
-	         * @private
-	         */
-
-	    }, {
-	        key: '_isDraggingChanged',
-	        value: function _isDraggingChanged(isDragging) {
-	            if (isDragging === false) {
-	                if (this.state.active) {
-	                    console.log('THIS', this.props);
-	                    _draggingStore2.default.getInstance().setCurrentField([this.props.row, this.props.column]);
-	                }
-
-	                this.setState({ active: false });
-	            }
-	        }
-	    }]);
-
-	    return ChessField;
-	}(React.Component);
-
-	exports.default = ChessField;
-
-/***/ },
-/* 162 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _draggingDispatcher = __webpack_require__(163);
-
-	var _draggingDispatcher2 = _interopRequireDefault(_draggingDispatcher);
-
-	var _eventEmitter = __webpack_require__(167);
-
-	var _eventEmitter2 = _interopRequireDefault(_eventEmitter);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var IS_DRAGGING_CHANGED = 'isDraggingChanged';
-	var CURSOR_POSITION_CHANGED = 'cursorPositionChanged';
-	var _draggingStoreInstance = null;
+	var _appDispatcherInstance = null;
 
 	/**
-	 * DraggingStore class
+	 * App dispatcher class
 	 */
 
-	var DraggingStore = function (_EventEmitter) {
-	    _inherits(DraggingStore, _EventEmitter);
+	var AppDispatcher = function (_Dispatcher) {
+	    _inherits(AppDispatcher, _Dispatcher);
 
-	    /**
-	     * Constructor
-	     */
-
-	    function DraggingStore() {
+	    function AppDispatcher() {
 	        var _ret;
 
-	        _classCallCheck(this, DraggingStore);
+	        _classCallCheck(this, AppDispatcher);
 
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DraggingStore).call(this));
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AppDispatcher).call(this));
 
 	        var vm = _this;
 
-	        return _ret = {
-	            _draggingDispatcher: new _draggingDispatcher2.default(),
-	            _isDragging: false,
-	            _position: { top: 0, left: 0 },
-	            _currentField: [0, 0],
+	        _this.handleViewAction = handleViewAction;
 
-	            getIsDragging: getIsDragging,
-	            getCurrentPosition: getCurrentPosition,
-	            getCurrentField: getCurrentField,
-
-	            setCurrentField: setCurrentField,
-
-	            emitDraggingChange: emitDraggingChange,
-	            emitCursorPositionChange: emitCursorPositionChange,
-
-	            addIsDraggingWatcher: addIsDraggingWatcher,
-	            addCursorPositionWatcher: addCursorPositionWatcher,
-
-	            removeIsDraggingWatcher: removeIsDraggingWatcher,
-	            removeCursorPositionWatcher: removeCursorPositionWatcher,
-
-	            dispatcherIndex: dispatcherIndex
-	        }, _possibleConstructorReturn(_this, _ret);
+	        return _ret = _this, _possibleConstructorReturn(_this, _ret);
 
 	        /**
-	         * Emit dragging change
-	         * @param {Object} position
+	         * Handle the view action
+	         * @param {Object} action
 	         */
-	        function emitCursorPositionChange(position) {
-	            this._position = position;
-	            vm.emit(CURSOR_POSITION_CHANGED, position);
-	        }
+	        function handleViewAction(action) {
+	            console.log('HANDLE VIEW ACTION', action);
 
-	        /**
-	         * Get the dragging state
-	         * @returns {Boolean}
-	         */
-	        function getIsDragging() {
-	            return this._isDragging;
-	        }
-
-	        /**
-	         * @returns {Object}
-	         */
-	        function getCurrentPosition() {
-	            return this._position;
-	        }
-
-	        /**
-	         * @returns {*}
-	         */
-	        function getCurrentField() {
-	            return this._currentField;
-	        }
-
-	        /**
-	         *
-	         * @param field
-	         */
-	        function setCurrentField(field) {
-	            this._currentField = field;
-	        }
-
-	        /**
-	         * Emit dragging change
-	         * @param {Boolean} isDragging
-	         */
-	        function emitDraggingChange(isDragging) {
-	            this._isDragging = isDragging;
-	            vm.emit(IS_DRAGGING_CHANGED, isDragging);
-	        }
-
-	        /**
-	         * @param {Function} callback
-	         */
-	        function addIsDraggingWatcher(callback) {
-	            vm.on(IS_DRAGGING_CHANGED, callback);
-	        }
-
-	        /**
-	         * Remove the dragging listener
-	         * @param {Function} callback
-	         */
-	        function removeIsDraggingWatcher(callback) {
-	            vm.off(IS_DRAGGING_CHANGED, callback);
-	        }
-
-	        /**
-	         * @param {Function} callback
-	         */
-	        function addCursorPositionWatcher(callback) {
-	            vm.on(CURSOR_POSITION_CHANGED, callback);
-	        }
-
-	        /**
-	         * @param {Function} callback
-	         */
-	        function removeCursorPositionWatcher(callback) {
-	            vm.off(CURSOR_POSITION_CHANGED, callback);
-	        }
-
-	        /**
-	         * Register the dispatcher
-	         */
-	        function dispatcherIndex() {
-	            var _this2 = this;
-
-	            vm._draggingDispatcher.register(function (isDragging) {
-	                return _this2._isDragging = isDragging;
+	            vm.dispatch({
+	                source: 'VIEW_ACTION',
+	                action: action
 	            });
 	        }
 	        return _this;
@@ -20337,101 +19962,26 @@
 
 	    /**
 	     * Singleton
-	     * @returns {DraggingStore}
 	     */
 
-	    _createClass(DraggingStore, null, [{
+	    _createClass(AppDispatcher, null, [{
 	        key: 'getInstance',
 	        value: function getInstance() {
-	            if (_draggingStoreInstance === null) {
-	                _draggingStoreInstance = new DraggingStore();
+	            if (_appDispatcherInstance === null) {
+	                _appDispatcherInstance = new AppDispatcher();
 	            }
 
-	            return _draggingStoreInstance;
+	            return _appDispatcherInstance;
 	        }
 	    }]);
 
-	    return DraggingStore;
-	}(_eventEmitter2.default);
-
-	exports.default = DraggingStore;
-
-/***/ },
-/* 163 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _flux = __webpack_require__(164);
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * DraggingDispatcher class
-	 */
-
-	var DraggingDispatcher = function (_Dispatcher) {
-	    _inherits(DraggingDispatcher, _Dispatcher);
-
-	    /**
-	     * When a draggingDispatcher gets created
-	     */
-
-	    function DraggingDispatcher() {
-	        _classCallCheck(this, DraggingDispatcher);
-
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DraggingDispatcher).call(this));
-
-	        _this._callbacks = [];
-	        return _this;
-	    }
-
-	    _createClass(DraggingDispatcher, [{
-	        key: 'dispatch',
-	        value: function dispatch() {
-	            this._callbacks.forEach(function (callback) {
-	                return callback();
-	            });
-	        }
-	    }, {
-	        key: 'register',
-	        value: function register(callback) {
-	            if (typeof callback !== 'function') {
-	                throw new Error('Please provide a valid callback to register the dispatcher');
-	            }
-
-	            this._callbacks.push(callback);
-	        }
-
-	        /**
-	         * Remove a callback from the collection
-	         * @param {Function} callback
-	         */
-
-	    }, {
-	        key: 'unregister',
-	        value: function unregister(callback) {
-	            this._callbacks.splice(this._callbacks.indexOf(callback), 1);
-	        }
-	    }]);
-
-	    return DraggingDispatcher;
+	    return AppDispatcher;
 	}(_flux.Dispatcher);
 
-	exports.default = DraggingDispatcher;
+	exports.default = AppDispatcher;
 
 /***/ },
-/* 164 */
+/* 162 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20445,10 +19995,10 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 
-	module.exports.Dispatcher = __webpack_require__(165);
+	module.exports.Dispatcher = __webpack_require__(163);
 
 /***/ },
-/* 165 */
+/* 163 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -20474,7 +20024,7 @@
 	  }
 	}
 
-	var invariant = __webpack_require__(166);
+	var invariant = __webpack_require__(164);
 
 	var _prefix = 'ID_';
 
@@ -20689,7 +20239,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 166 */
+/* 164 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -20744,15 +20294,606 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 167 */
+/* 165 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var React = _interopRequireWildcard(_react);
+
+	var _chessField = __webpack_require__(166);
+
+	var _chessField2 = _interopRequireDefault(_chessField);
+
+	var _chessPiece = __webpack_require__(184);
+
+	var _chessPiece2 = _interopRequireDefault(_chessPiece);
+
+	var _draggingActions = __webpack_require__(160);
+
+	var _draggingActions2 = _interopRequireDefault(_draggingActions);
+
+	var _draggingStore = __webpack_require__(167);
+
+	var _draggingStore2 = _interopRequireDefault(_draggingStore);
+
+	var _reactIf = __webpack_require__(186);
+
+	var _reactIf2 = _interopRequireDefault(_reactIf);
+
+	var _style = __webpack_require__(185);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * The ChessBoard class
+	 */
+
+	var ChessBoard = function (_React$Component) {
+	    _inherits(ChessBoard, _React$Component);
+
+	    function ChessBoard() {
+	        _classCallCheck(this, ChessBoard);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(ChessBoard).apply(this, arguments));
+	    }
+
+	    _createClass(ChessBoard, [{
+	        key: 'componentDidMount',
+
+	        /**
+	         * When the component gets activated
+	         */
+	        value: function componentDidMount() {
+	            this._isDragging = false;
+	            _draggingStore2.default.getInstance().addIsDraggingWatcher(this._draggingStateChanged);
+	        }
+
+	        /**
+	         * Just before deactivating the component
+	         */
+
+	    }, {
+	        key: 'componentWillUnmount',
+	        value: function componentWillUnmount() {
+	            _draggingStore2.default.getInstance().removeIsDraggingWatcher(this._draggingStateChanged);
+	        }
+
+	        /**
+	         * Render the component
+	         */
+
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var size = 50 * 16 + 'px';
+	            var style = {
+	                height: size,
+	                width: size,
+	                border: '1px #000000 solid'
+	            };
+
+	            var fields = [];
+
+	            // TODO clean up
+	            // TODO use constants
+	            for (var i = 0; i < Math.pow(16, 2); i++) {
+	                var row = Math.floor(i / 16);
+	                var column = i % 16;
+	                var background = row % 2 > 0 && column % 2 > 0 || row % 2 === 0 && column % 2 === 0 ? _style.STYLE.CHESS_FIELD.COLORS.LIGHT : _style.STYLE.CHESS_FIELD.COLORS.DARK;
+	                var fieldKey = 'field' + i;
+	                var hasPiece = _draggingStore2.default.getInstance().getCurrentField()[0] === row && _draggingStore2.default.getInstance().getCurrentField()[1] === column;
+
+	                // TODO make iterator component
+	                fields.push(React.createElement(
+	                    _chessField2.default,
+	                    {
+	                        background: background,
+	                        key: fieldKey,
+	                        row: row,
+	                        column: column,
+	                        size: 50
+	                    },
+	                    React.createElement(
+	                        _reactIf2.default,
+	                        { condition: hasPiece },
+	                        React.createElement(_chessPiece2.default, null)
+	                    )
+	                ));
+	            }
+
+	            return React.createElement(
+	                'div',
+	                {
+	                    style: style,
+	                    onMouseUp: this._onMouseUp
+	                },
+	                fields
+	            );
+	        }
+
+	        /**
+	         * Start the dragging
+	         * @private
+	         */
+
+	    }, {
+	        key: '_draggingStateChanged',
+	        value: function _draggingStateChanged(isDragging) {
+	            // TODO: move this to store and get isDragging with getter
+	            // When doing that, binds can be removed from listeners
+	            this._isDragging = isDragging;
+	        }
+
+	        /**
+	         * Mouse up on chess board
+	         * @private
+	         */
+
+	    }, {
+	        key: '_onMouseUp',
+	        value: function _onMouseUp() {
+	            _draggingActions2.default.changeDragging(false);
+	        }
+	    }]);
+
+	    return ChessBoard;
+	}(React.Component);
+
+	exports.default = ChessBoard;
+
+/***/ },
+/* 166 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
-	var d = __webpack_require__(168),
-	    callable = __webpack_require__(181),
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var React = _interopRequireWildcard(_react);
+
+	var _draggingStore = __webpack_require__(167);
+
+	var _draggingStore2 = _interopRequireDefault(_draggingStore);
+
+	var _chessPiece = __webpack_require__(184);
+
+	var _chessPiece2 = _interopRequireDefault(_chessPiece);
+
+	var _reactIf = __webpack_require__(186);
+
+	var _reactIf2 = _interopRequireDefault(_reactIf);
+
+	var _style = __webpack_require__(185);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * The ChessField class
+	 */
+
+	var ChessField = function (_React$Component) {
+	    _inherits(ChessField, _React$Component);
+
+	    function ChessField() {
+	        _classCallCheck(this, ChessField);
+
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(ChessField).apply(this, arguments));
+	    }
+
+	    _createClass(ChessField, [{
+	        key: 'componentDidMount',
+
+	        /**
+	         * When the component gets activated
+	         */
+	        value: function componentDidMount() {
+	            this.originalBackground = this.props.background;
+	            this.top = this.props.row * this.props.size;
+	            this.left = this.props.column * this.props.size;
+	            this.bottom = this.top + this.props.size;
+	            this.right = this.left + this.props.size;
+
+	            _draggingStore2.default.getInstance().addCursorPositionWatcher(this._cursorPositionChanged.bind(this));
+	            _draggingStore2.default.getInstance().addIsDraggingWatcher(this._isDraggingChanged.bind(this));
+	        }
+
+	        /**
+	         * Just before deactivating the component
+	         */
+
+	    }, {
+	        key: 'componentWillUnmount',
+	        value: function componentWillUnmount() {
+	            _draggingStore2.default.getInstance().removeCursorPositionWatcher(this._cursorPositionChanged.bind(this));
+	            _draggingStore2.default.getInstance().removeIsDraggingWatcher(this._isDraggingChanged.bind(this));
+	        }
+
+	        /**
+	         * Render the component
+	         */
+
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            // TODO default value with constants
+	            var background = this.props.background;
+	            var height = this.props.size + 'px';
+	            var width = this.props.size + 'px';
+	            var float = 'left';
+
+	            if (_typeof(this.state) === 'object' && this.state !== null && this.state.active === true) {
+	                background = _style.STYLE.CHESS_FIELD.COLORS.ACTIVE;
+	            }
+
+	            var style = {
+	                background: background, height: height, width: width, float: float
+	            };
+
+	            return React.createElement(
+	                'div',
+	                {
+	                    style: style
+	                },
+	                this.props.children
+	            );
+	        }
+
+	        /**
+	         *
+	         * @param position
+	         * @private
+	         */
+
+	    }, {
+	        key: '_cursorPositionChanged',
+	        value: function _cursorPositionChanged(position) {
+	            var active = position.x > this.left && position.x < this.right && position.y > this.top && position.y < this.bottom;
+
+	            this.setState({ active: active });
+	        }
+
+	        /**
+	         *
+	         * @param {Boolean} isDragging
+	         * @private
+	         */
+
+	    }, {
+	        key: '_isDraggingChanged',
+	        value: function _isDraggingChanged(isDragging) {
+	            if (isDragging === false) {
+	                if (this.state.active) {
+	                    console.log('THIS', this.props);
+	                    _draggingStore2.default.getInstance().setCurrentField([this.props.row, this.props.column]);
+	                }
+
+	                this.setState({ active: false });
+	            }
+	        }
+	    }]);
+
+	    return ChessField;
+	}(React.Component);
+
+	exports.default = ChessField;
+
+/***/ },
+/* 167 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _draggingDispatcher = __webpack_require__(168);
+
+	var _draggingDispatcher2 = _interopRequireDefault(_draggingDispatcher);
+
+	var _eventEmitter = __webpack_require__(169);
+
+	var _eventEmitter2 = _interopRequireDefault(_eventEmitter);
+
+	var _appDispatcher = __webpack_require__(161);
+
+	var _appDispatcher2 = _interopRequireDefault(_appDispatcher);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var IS_DRAGGING_CHANGED = 'isDraggingChanged';
+	var CURSOR_POSITION_CHANGED = 'cursorPositionChanged';
+	var _draggingStoreInstance = null;
+
+	/**
+	 * DraggingStore class
+	 */
+
+	var DraggingStore = function (_EventEmitter) {
+	    _inherits(DraggingStore, _EventEmitter);
+
+	    /**
+	     * Constructor
+	     */
+
+	    function DraggingStore() {
+	        var _ret;
+
+	        _classCallCheck(this, DraggingStore);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DraggingStore).call(this));
+
+	        var vm = _this;
+
+	        vm._draggingDispatcher = new _draggingDispatcher2.default();
+	        vm._isDragging = false;
+	        vm._position = { top: 0, left: 0 };
+	        vm._currentField = [0, 0];
+
+	        vm.getIsDragging = getIsDragging;
+	        vm.getCurrentPosition = getCurrentPosition;
+	        vm.getCurrentField = getCurrentField;
+	        vm.setCurrentField = setCurrentField;
+	        vm.emitDraggingChange = emitDraggingChange;
+	        vm.emitCursorPositionChange = emitCursorPositionChange;
+	        vm.addIsDraggingWatcher = addIsDraggingWatcher;
+	        vm.addCursorPositionWatcher = addCursorPositionWatcher;
+	        vm.removeIsDraggingWatcher = removeIsDraggingWatcher;
+	        vm.removeCursorPositionWatcher = removeCursorPositionWatcher;
+	        vm.dispatcherIndex = registerDispatcher();
+
+	        return _ret = _this, _possibleConstructorReturn(_this, _ret);
+
+	        /**
+	         * Emit dragging change
+	         * @param {Object} position
+	         */
+	        function emitCursorPositionChange(position) {
+	            vm._position = position;
+	            vm.emit(CURSOR_POSITION_CHANGED, position);
+	        }
+
+	        /**
+	         * Get the dragging state
+	         * @returns {Boolean}
+	         */
+	        function getIsDragging() {
+	            return vm._isDragging;
+	        }
+
+	        /**
+	         * @returns {Object}
+	         */
+	        function getCurrentPosition() {
+	            return vm._position;
+	        }
+
+	        /**
+	         * @returns {*}
+	         */
+	        function getCurrentField() {
+	            return vm._currentField;
+	        }
+
+	        /**
+	         *
+	         * @param field
+	         */
+	        function setCurrentField(field) {
+	            vm._currentField = field;
+	        }
+
+	        /**
+	         * Emit dragging change
+	         * @param {Boolean} isDragging
+	         */
+	        function emitDraggingChange(isDragging) {
+	            vm._isDragging = isDragging;
+	            vm.emit(IS_DRAGGING_CHANGED, isDragging);
+	        }
+
+	        /**
+	         * @param {Function} callback
+	         */
+	        function addIsDraggingWatcher(callback) {
+	            console.log('add is dragging watcher');
+
+	            vm.on(IS_DRAGGING_CHANGED, callback);
+	        }
+
+	        /**
+	         * Remove the dragging listener
+	         * @param {Function} callback
+	         */
+	        function removeIsDraggingWatcher(callback) {
+	            vm.off(IS_DRAGGING_CHANGED, callback);
+	        }
+
+	        /**
+	         * @param {Function} callback
+	         */
+	        function addCursorPositionWatcher(callback) {
+	            vm.on(CURSOR_POSITION_CHANGED, callback);
+	        }
+
+	        /**
+	         * @param {Function} callback
+	         */
+	        function removeCursorPositionWatcher(callback) {
+	            vm.off(CURSOR_POSITION_CHANGED, callback);
+	        }
+
+	        /**
+	         *
+	         */
+	        function registerDispatcher() {
+	            _appDispatcher2.default.getInstance().register(function (payload) {
+	                var action = payload.action;
+
+	                // TODO constants
+	                switch (action.actionType) {
+
+	                    case CURSOR_POSITION_CHANGED:
+	                        emitCursorPositionChange(action.position);
+	                        break;
+
+	                    case IS_DRAGGING_CHANGED:
+	                        emitDraggingChange(action.isDragging);
+	                        break;
+	                }
+
+	                return true;
+	            });
+	        }
+	        return _this;
+	    }
+
+	    /**
+	     * Singleton
+	     * @returns {DraggingStore}
+	     */
+
+	    _createClass(DraggingStore, null, [{
+	        key: 'getInstance',
+	        value: function getInstance() {
+	            if (_draggingStoreInstance === null) {
+	                _draggingStoreInstance = new DraggingStore();
+	            }
+
+	            return _draggingStoreInstance;
+	        }
+	    }]);
+
+	    return DraggingStore;
+	}(_eventEmitter2.default);
+
+	exports.default = DraggingStore;
+
+/***/ },
+/* 168 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _flux = __webpack_require__(162);
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * DraggingDispatcher class
+	 */
+
+	var DraggingDispatcher = function (_Dispatcher) {
+	    _inherits(DraggingDispatcher, _Dispatcher);
+
+	    /**
+	     * When a draggingDispatcher gets created
+	     */
+
+	    function DraggingDispatcher() {
+	        _classCallCheck(this, DraggingDispatcher);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DraggingDispatcher).call(this));
+
+	        _this._callbacks = [];
+	        return _this;
+	    }
+
+	    _createClass(DraggingDispatcher, [{
+	        key: 'dispatch',
+	        value: function dispatch() {
+	            this._callbacks.forEach(function (callback) {
+	                return callback();
+	            });
+	        }
+	    }, {
+	        key: 'register',
+	        value: function register(callback) {
+	            if (typeof callback !== 'function') {
+	                throw new Error('Please provide a valid callback to register the dispatcher');
+	            }
+
+	            this._callbacks.push(callback);
+	        }
+
+	        /**
+	         * Remove a callback from the collection
+	         * @param {Function} callback
+	         */
+
+	    }, {
+	        key: 'unregister',
+	        value: function unregister(callback) {
+	            this._callbacks.splice(this._callbacks.indexOf(callback), 1);
+	        }
+	    }]);
+
+	    return DraggingDispatcher;
+	}(_flux.Dispatcher);
+
+	exports.default = DraggingDispatcher;
+
+/***/ },
+/* 169 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+	var d = __webpack_require__(170),
+	    callable = __webpack_require__(183),
 	    apply = Function.prototype.apply,
 	    call = Function.prototype.call,
 	    create = Object.create,
@@ -20884,15 +21025,15 @@
 	exports.methods = methods;
 
 /***/ },
-/* 168 */
+/* 170 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var assign = __webpack_require__(169),
-	    normalizeOpts = __webpack_require__(176),
-	    isCallable = __webpack_require__(177),
-	    contains = __webpack_require__(178),
+	var assign = __webpack_require__(171),
+	    normalizeOpts = __webpack_require__(178),
+	    isCallable = __webpack_require__(179),
+	    contains = __webpack_require__(180),
 	    d;
 
 	d = module.exports = function (dscr, value /*, options*/) {
@@ -20951,15 +21092,15 @@
 	};
 
 /***/ },
-/* 169 */
+/* 171 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	module.exports = __webpack_require__(170)() ? Object.assign : __webpack_require__(171);
+	module.exports = __webpack_require__(172)() ? Object.assign : __webpack_require__(173);
 
 /***/ },
-/* 170 */
+/* 172 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -20974,13 +21115,13 @@
 	};
 
 /***/ },
-/* 171 */
+/* 173 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var keys = __webpack_require__(172),
-	    value = __webpack_require__(175),
+	var keys = __webpack_require__(174),
+	    value = __webpack_require__(177),
 	    max = Math.max;
 
 	module.exports = function (dest, src /*, …srcn*/) {
@@ -21005,15 +21146,15 @@
 	};
 
 /***/ },
-/* 172 */
+/* 174 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	module.exports = __webpack_require__(173)() ? Object.keys : __webpack_require__(174);
+	module.exports = __webpack_require__(175)() ? Object.keys : __webpack_require__(176);
 
 /***/ },
-/* 173 */
+/* 175 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21028,7 +21169,7 @@
 	};
 
 /***/ },
-/* 174 */
+/* 176 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21040,7 +21181,7 @@
 	};
 
 /***/ },
-/* 175 */
+/* 177 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21051,7 +21192,7 @@
 	};
 
 /***/ },
-/* 176 */
+/* 178 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21076,7 +21217,7 @@
 	};
 
 /***/ },
-/* 177 */
+/* 179 */
 /***/ function(module, exports) {
 
 	// Deprecated
@@ -21088,15 +21229,15 @@
 	};
 
 /***/ },
-/* 178 */
+/* 180 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	module.exports = __webpack_require__(179)() ? String.prototype.contains : __webpack_require__(180);
+	module.exports = __webpack_require__(181)() ? String.prototype.contains : __webpack_require__(182);
 
 /***/ },
-/* 179 */
+/* 181 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21109,7 +21250,7 @@
 	};
 
 /***/ },
-/* 180 */
+/* 182 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21121,7 +21262,7 @@
 	};
 
 /***/ },
-/* 181 */
+/* 183 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21132,7 +21273,7 @@
 	};
 
 /***/ },
-/* 182 */
+/* 184 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21147,11 +21288,11 @@
 
 	var React = _interopRequireWildcard(_react);
 
-	var _draggingStore = __webpack_require__(162);
+	var _draggingActions = __webpack_require__(160);
 
-	var _draggingStore2 = _interopRequireDefault(_draggingStore);
+	var _draggingActions2 = _interopRequireDefault(_draggingActions);
 
-	var _style = __webpack_require__(183);
+	var _style = __webpack_require__(185);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -21226,7 +21367,7 @@
 	    }, {
 	        key: '_onMouseDown',
 	        value: function _onMouseDown() {
-	            _draggingStore2.default.getInstance().emitDraggingChange(true);
+	            _draggingActions2.default.changeDragging(true);
 	        }
 
 	        /**
@@ -21237,7 +21378,7 @@
 	    }, {
 	        key: '_onMouseUp',
 	        value: function _onMouseUp() {
-	            _draggingStore2.default.getInstance().emitDraggingChange(false);
+	            _draggingActions2.default.changeDragging(false);
 	        }
 	    }]);
 
@@ -21247,7 +21388,7 @@
 	exports.default = ChessPiece;
 
 /***/ },
-/* 183 */
+/* 185 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21272,7 +21413,7 @@
 	};
 
 /***/ },
-/* 184 */
+/* 186 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21318,10 +21459,6 @@
 	                throw new Error('Please provide a condition and result');
 	            }
 
-	            var style = {
-	                display: this.props.condition === true ? 'block' : 'none'
-	            };
-
 	            if (this.props.condition) {
 	                return this.props.children;
 	            }
@@ -21336,7 +21473,7 @@
 	exports.default = ReactIf;
 
 /***/ },
-/* 185 */
+/* 187 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21353,11 +21490,11 @@
 
 	var React = _interopRequireWildcard(_react);
 
-	var _chessPiece = __webpack_require__(182);
+	var _chessPiece = __webpack_require__(184);
 
 	var _chessPiece2 = _interopRequireDefault(_chessPiece);
 
-	var _draggingStore = __webpack_require__(162);
+	var _draggingStore = __webpack_require__(167);
 
 	var _draggingStore2 = _interopRequireDefault(_draggingStore);
 
@@ -21398,12 +21535,7 @@
 	    _createClass(ChessPiecePreview, [{
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
-	            console.log('MOUNT');
-
 	            _draggingStore2.default.getInstance().addCursorPositionWatcher(this._onCursorPositionChanged.bind(this));
-	            _draggingStore2.default.getInstance().addIsDraggingWatcher(function (isDragging) {
-	                console.log('dragging', isDragging);
-	            });
 	        }
 
 	        /**

@@ -1,5 +1,6 @@
 import DraggingDispatcher from '../dispatcher/dragging-dispatcher';
 import EventEmitter from 'event-emitter';
+import AppDispatcher from '../dispatcher/app-dispatcher';
 
 const IS_DRAGGING_CHANGED = 'isDraggingChanged';
 const CURSOR_POSITION_CHANGED = 'cursorPositionChanged';
@@ -18,36 +19,31 @@ export default class DraggingStore extends EventEmitter
 
         const vm = this;
 
-        return {
-            _draggingDispatcher: new DraggingDispatcher(),
-            _isDragging: false,
-            _position: { top: 0, left: 0 },
-            _currentField: [0, 0],
+        vm._draggingDispatcher = new DraggingDispatcher();
+        vm._isDragging = false;
+        vm._position = { top: 0, left: 0 };
+        vm._currentField = [0, 0];
 
-            getIsDragging,
-            getCurrentPosition,
-            getCurrentField,
+        vm.getIsDragging = getIsDragging;
+        vm.getCurrentPosition = getCurrentPosition;
+        vm.getCurrentField = getCurrentField;
+        vm.setCurrentField = setCurrentField;
+        vm.emitDraggingChange = emitDraggingChange;
+        vm.emitCursorPositionChange = emitCursorPositionChange;
+        vm.addIsDraggingWatcher = addIsDraggingWatcher;
+        vm.addCursorPositionWatcher = addCursorPositionWatcher;
+        vm.removeIsDraggingWatcher = removeIsDraggingWatcher;
+        vm.removeCursorPositionWatcher = removeCursorPositionWatcher;
+        vm.dispatcherIndex = registerDispatcher();
 
-            setCurrentField,
-
-            emitDraggingChange,
-            emitCursorPositionChange,
-
-            addIsDraggingWatcher,
-            addCursorPositionWatcher,
-
-            removeIsDraggingWatcher,
-            removeCursorPositionWatcher,
-
-            dispatcherIndex
-        };
+        return this;
 
         /**
          * Emit dragging change
          * @param {Object} position
          */
         function emitCursorPositionChange (position) {
-            this._position = position;
+            vm._position = position;
             vm.emit(CURSOR_POSITION_CHANGED, position);
         }
 
@@ -56,21 +52,21 @@ export default class DraggingStore extends EventEmitter
          * @returns {Boolean}
          */
         function getIsDragging () {
-            return this._isDragging;
+            return vm._isDragging;
         }
 
         /**
          * @returns {Object}
          */
         function getCurrentPosition () {
-            return this._position;
+            return vm._position;
         }
 
         /**
          * @returns {*}
          */
         function getCurrentField () {
-            return this._currentField;
+            return vm._currentField;
         }
 
         /**
@@ -78,7 +74,7 @@ export default class DraggingStore extends EventEmitter
          * @param field
          */
         function setCurrentField (field) {
-            this._currentField = field;
+            vm._currentField = field;
         }
 
         /**
@@ -86,7 +82,7 @@ export default class DraggingStore extends EventEmitter
          * @param {Boolean} isDragging
          */
         function emitDraggingChange (isDragging) {
-            this._isDragging = isDragging;
+            vm._isDragging = isDragging;
             vm.emit(IS_DRAGGING_CHANGED, isDragging);
         }
 
@@ -94,6 +90,8 @@ export default class DraggingStore extends EventEmitter
          * @param {Function} callback
          */
         function addIsDraggingWatcher (callback) {
+            console.log('add is dragging watcher');
+
             vm.on(IS_DRAGGING_CHANGED, callback);
         }
 
@@ -120,10 +118,26 @@ export default class DraggingStore extends EventEmitter
         }
 
         /**
-         * Register the dispatcher
+         *
          */
-        function dispatcherIndex () {
-            vm._draggingDispatcher.register(isDragging => this._isDragging = isDragging);
+        function registerDispatcher () {
+            AppDispatcher.getInstance().register(payload => {
+                const action = payload.action;
+
+                // TODO constants
+                switch (action.actionType) {
+
+                case CURSOR_POSITION_CHANGED:
+                    emitCursorPositionChange(action.position);
+                    break;
+
+                case IS_DRAGGING_CHANGED:
+                    emitDraggingChange(action.isDragging);
+                    break;
+                }
+
+                return true;
+            });
         }
     }
 

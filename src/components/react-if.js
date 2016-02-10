@@ -14,10 +14,6 @@ export default class ReactIf extends React.Component
             throw new Error('Please provide a condition and result');
         }
 
-        const style = {
-            display: this.props.condition === true ? 'block' : 'none'
-        };
-
         if (this.props.condition) {
             return this.props.children;
         }

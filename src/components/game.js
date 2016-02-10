@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Actions from '../actions/dragging-actions';
 import ChessBoard from './chess-board';
 import ChessPiecePreview from './chess-piece-preview';
 import DraggingStore from '../stores/dragging-store';
@@ -59,7 +60,7 @@ export default class Game extends React.Component
         };
 
         if (DraggingStore.getInstance().getIsDragging() === true) {
-            DraggingStore.getInstance().emitCursorPositionChange(data);
+            Actions.changeCursorPosition(data);
         }
     }
 

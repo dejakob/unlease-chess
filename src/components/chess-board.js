@@ -1,6 +1,7 @@
 import * as React from 'react';
 import ChessField from './chess-field';
 import ChessPiece from './chess-piece';
+import Actions from '../actions/dragging-actions';
 import DraggingStore from '../stores/dragging-store';
 import If from './react-if';
 import { STYLE } from '../constants/style';
@@ -96,6 +97,6 @@ export default class ChessBoard extends React.Component
      * @private
      */
     _onMouseUp () {
-        DraggingStore.getInstance().emitDraggingChange(false);
+        Actions.changeDragging(false);
     }
 }

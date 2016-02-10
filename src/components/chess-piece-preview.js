@@ -19,14 +19,8 @@ export default class ChessPiecePreview extends ChessPiece
      * When the component mounts
      */
     componentDidMount () {
-        console.log('MOUNT');
-
         DraggingStore.getInstance()
             .addCursorPositionWatcher(this._onCursorPositionChanged.bind(this));
-        DraggingStore.getInstance()
-            .addIsDraggingWatcher(isDragging => {
-                console.log('dragging', isDragging);
-            });
     }
 
     /**
