@@ -1,0 +1,1 @@
+jest.dontMock('../../src/actions/dragging-actions');

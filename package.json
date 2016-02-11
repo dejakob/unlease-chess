@@ -11,7 +11,23 @@
     "unmockedModulePathPatterns": [
       "./node_modules/react"
     ],
-    "collectCoverage": true
+    "collectCoverage": true,
+    "testDirectoryName": "spec",
+    "moduleFileExtensions": ["js"],
+    "collectCoverageOnlyFrom": {
+      "src/actions/dragging-actions.js": true,
+      "src/components/chess-board.js": true,
+      "src/components/chess-field.js": true,
+      "src/components/chess-piece-preview.js": true,
+      "src/components/game.js": true,
+      "src/components/react-if.js": true,
+      "src/constants/actions.js": true,
+      "src/constants/style.js": true,
+      "src/dispatcher/app-dispatcher.js": true,
+      "src/dispatcher/chess-helper.js": true,
+      "src/dispatcher/dragging-store.js": true,
+      "src/main.js": true
+    }
   },
   "repository": {
     "type": "git",
