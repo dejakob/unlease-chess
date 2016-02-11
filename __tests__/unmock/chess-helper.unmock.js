@@ -1,0 +1,1 @@
+jest.dontMock('../../src/helpers/chess-helper');
