@@ -31,6 +31,24 @@ describe('ChessHelper', () => {
             expect(chessHelper.canMoveHere).toBeDefined();
         });
 
-        // TODO
+        it('should be true when a piece can be moved', () => {
+            const fromRow = 4;
+            const fromColumn = 2;
+            const toRow = 6;
+            const toColumn = 1;
+
+            expect(chessHelper.canMoveHere(fromRow, fromColumn, toRow, toColumn))
+                .toBeTruthy();
+        });
+
+        it('should be false when a piece cannot be moved', () => {
+            const fromRow = 4;
+            const fromColumn = 2;
+            const toRow = 6;
+            const toColumn = 8;
+
+            expect(chessHelper.canMoveHere(fromRow, fromColumn, toRow, toColumn))
+                .toBeFalsy();
+        });
     });
 });
