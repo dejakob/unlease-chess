@@ -1,9 +1,11 @@
-import DraggingDispatcher from '../dispatcher/dragging-dispatcher';
 import EventEmitter from 'event-emitter';
 import AppDispatcher from '../dispatcher/app-dispatcher';
 
-const IS_DRAGGING_CHANGED = 'isDraggingChanged';
-const CURSOR_POSITION_CHANGED = 'cursorPositionChanged';
+import {
+    ACTION_CURSOR_POSITION_CHANGED,
+    ACTION_IS_DRAGGING_CHANGED
+} from '../constants/actions';
+
 let _draggingStoreInstance = null;
 
 /**
@@ -16,10 +18,8 @@ export default class DraggingStore extends EventEmitter
      */
     constructor () {
         super();
-
         const vm = this;
 
-        vm._draggingDispatcher = new DraggingDispatcher();
         vm._isDragging = false;
         vm._position = { top: 0, left: 0 };
         vm._currentField = [0, 0];
@@ -36,7 +36,7 @@ export default class DraggingStore extends EventEmitter
         vm.removeCursorPositionWatcher = removeCursorPositionWatcher;
         vm.dispatcherIndex = registerDispatcher();
 
-        return this;
+        return vm;
 
         /**
          * Emit dragging change
@@ -44,7 +44,7 @@ export default class DraggingStore extends EventEmitter
          */
         function emitCursorPositionChange (position) {
             vm._position = position;
-            vm.emit(CURSOR_POSITION_CHANGED, position);
+            vm.emit(ACTION_CURSOR_POSITION_CHANGED, position);
         }
 
         /**
@@ -83,16 +83,14 @@ export default class DraggingStore extends EventEmitter
          */
         function emitDraggingChange (isDragging) {
             vm._isDragging = isDragging;
-            vm.emit(IS_DRAGGING_CHANGED, isDragging);
+            vm.emit(ACTION_IS_DRAGGING_CHANGED, isDragging);
         }
 
         /**
          * @param {Function} callback
          */
         function addIsDraggingWatcher (callback) {
-            console.log('add is dragging watcher');
-
-            vm.on(IS_DRAGGING_CHANGED, callback);
+            vm.on(ACTION_IS_DRAGGING_CHANGED, callback);
         }
 
         /**
@@ -100,21 +98,21 @@ export default class DraggingStore extends EventEmitter
          * @param {Function} callback
          */
         function removeIsDraggingWatcher (callback) {
-            vm.off(IS_DRAGGING_CHANGED, callback);
+            vm.off(ACTION_IS_DRAGGING_CHANGED, callback);
         }
 
         /**
          * @param {Function} callback
          */
         function addCursorPositionWatcher (callback) {
-            vm.on(CURSOR_POSITION_CHANGED, callback);
+            vm.on(ACTION_CURSOR_POSITION_CHANGED, callback);
         }
 
         /**
          * @param {Function} callback
          */
         function removeCursorPositionWatcher (callback) {
-            vm.off(CURSOR_POSITION_CHANGED, callback);
+            vm.off(ACTION_CURSOR_POSITION_CHANGED, callback);
         }
 
         /**
@@ -127,11 +125,11 @@ export default class DraggingStore extends EventEmitter
                 // TODO constants
                 switch (action.actionType) {
 
-                case CURSOR_POSITION_CHANGED:
+                case ACTION_CURSOR_POSITION_CHANGED:
                     emitCursorPositionChange(action.position);
                     break;
 
-                case IS_DRAGGING_CHANGED:
+                case ACTION_IS_DRAGGING_CHANGED:
                     emitDraggingChange(action.isDragging);
                     break;
                 }

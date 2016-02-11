@@ -58,6 +58,11 @@ export default class ChessPiecePreview extends ChessPiece
      * @private
      */
     _onCursorPositionChanged (position) {
-        this.setState(position);
+        try {
+            this.setState(position);
+        }
+        catch (ex) {
+            // ...
+        }
     }
 }

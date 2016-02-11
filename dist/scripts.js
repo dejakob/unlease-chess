@@ -19724,11 +19724,11 @@
 
 	'use strict';
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(1);
 
@@ -19738,19 +19738,19 @@
 
 	var _draggingActions2 = _interopRequireDefault(_draggingActions);
 
-	var _chessBoard = __webpack_require__(165);
+	var _chessBoard = __webpack_require__(166);
 
 	var _chessBoard2 = _interopRequireDefault(_chessBoard);
 
-	var _chessPiecePreview = __webpack_require__(187);
+	var _chessPiecePreview = __webpack_require__(188);
 
 	var _chessPiecePreview2 = _interopRequireDefault(_chessPiecePreview);
 
-	var _draggingStore = __webpack_require__(167);
+	var _draggingStore = __webpack_require__(168);
 
 	var _draggingStore2 = _interopRequireDefault(_draggingStore);
 
-	var _reactIf = __webpack_require__(186);
+	var _reactIf = __webpack_require__(187);
 
 	var _reactIf2 = _interopRequireDefault(_reactIf);
 
@@ -19874,6 +19874,8 @@
 
 	var _appDispatcher2 = _interopRequireDefault(_appDispatcher);
 
+	var _actions = __webpack_require__(165);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = {
@@ -19884,8 +19886,7 @@
 
 	    changeDragging: function changeDragging(isDragging) {
 	        _appDispatcher2.default.getInstance().handleViewAction({
-	            // TODO constant
-	            actionType: 'isDraggingChanged',
+	            actionType: _actions.ACTION_IS_DRAGGING_CHANGED,
 	            isDragging: isDragging
 	        });
 	    },
@@ -19896,8 +19897,7 @@
 	     */
 	    changeCursorPosition: function changeCursorPosition(position) {
 	        _appDispatcher2.default.getInstance().handleViewAction({
-	            // TODO constant
-	            actionType: 'cursorPositionChanged',
+	            actionType: _actions.ACTION_CURSOR_POSITION_CHANGED,
 	            position: position
 	        });
 	    }
@@ -19909,11 +19909,11 @@
 
 	'use strict';
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _flux = __webpack_require__(162);
 
@@ -19950,8 +19950,6 @@
 	         * @param {Object} action
 	         */
 	        function handleViewAction(action) {
-	            console.log('HANDLE VIEW ACTION', action);
-
 	            vm.dispatch({
 	                source: 'VIEW_ACTION',
 	                action: action
@@ -20295,21 +20293,33 @@
 
 /***/ },
 /* 165 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	'use strict';
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var ACTION_CURSOR_POSITION_CHANGED = exports.ACTION_CURSOR_POSITION_CHANGED = 'ACTION_CURSOR_POSITION_CHANGED';
+	var ACTION_IS_DRAGGING_CHANGED = exports.ACTION_IS_DRAGGING_CHANGED = 'ACTION_IS_DRAGGING_CHANGED';
+
+/***/ },
+/* 166 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
 
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 	var _react = __webpack_require__(1);
 
 	var React = _interopRequireWildcard(_react);
 
-	var _chessField = __webpack_require__(166);
+	var _chessField = __webpack_require__(167);
 
 	var _chessField2 = _interopRequireDefault(_chessField);
 
@@ -20321,11 +20331,11 @@
 
 	var _draggingActions2 = _interopRequireDefault(_draggingActions);
 
-	var _draggingStore = __webpack_require__(167);
+	var _draggingStore = __webpack_require__(168);
 
 	var _draggingStore2 = _interopRequireDefault(_draggingStore);
 
-	var _reactIf = __webpack_require__(186);
+	var _reactIf = __webpack_require__(187);
 
 	var _reactIf2 = _interopRequireDefault(_reactIf);
 
@@ -20459,24 +20469,24 @@
 	exports.default = ChessBoard;
 
 /***/ },
-/* 166 */
+/* 167 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
 
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 	var _react = __webpack_require__(1);
 
 	var React = _interopRequireWildcard(_react);
 
-	var _draggingStore = __webpack_require__(167);
+	var _draggingStore = __webpack_require__(168);
 
 	var _draggingStore2 = _interopRequireDefault(_draggingStore);
 
@@ -20484,7 +20494,11 @@
 
 	var _chessPiece2 = _interopRequireDefault(_chessPiece);
 
-	var _reactIf = __webpack_require__(186);
+	var _chessHelper = __webpack_require__(186);
+
+	var _chessHelper2 = _interopRequireDefault(_chessHelper);
+
+	var _reactIf = __webpack_require__(187);
 
 	var _reactIf2 = _interopRequireDefault(_reactIf);
 
@@ -20580,9 +20594,15 @@
 	    }, {
 	        key: '_cursorPositionChanged',
 	        value: function _cursorPositionChanged(position) {
-	            var active = position.x > this.left && position.x < this.right && position.y > this.top && position.y < this.bottom;
+	            var hasHover = position.x > this.left && position.x < this.right && position.y > this.top && position.y < this.bottom;
+	            var currentRow = _draggingStore2.default.getInstance().getCurrentField()[0];
+	            var currentColumn = _draggingStore2.default.getInstance().getCurrentField()[1];
 
-	            this.setState({ active: active });
+	            if (hasHover && _chessHelper2.default.getInstance().canMoveHere(currentRow, currentColumn, this.props.row, this.props.column)) {
+	                this.setState({ active: true });
+	            } else {
+	                this.setState({ active: false });
+	            }
 	        }
 
 	        /**
@@ -20596,7 +20616,6 @@
 	        value: function _isDraggingChanged(isDragging) {
 	            if (isDragging === false) {
 	                if (this.state.active) {
-	                    console.log('THIS', this.props);
 	                    _draggingStore2.default.getInstance().setCurrentField([this.props.row, this.props.column]);
 	                }
 
@@ -20611,20 +20630,16 @@
 	exports.default = ChessField;
 
 /***/ },
-/* 167 */
+/* 168 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
 
-	var _draggingDispatcher = __webpack_require__(168);
-
-	var _draggingDispatcher2 = _interopRequireDefault(_draggingDispatcher);
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _eventEmitter = __webpack_require__(169);
 
@@ -20634,6 +20649,8 @@
 
 	var _appDispatcher2 = _interopRequireDefault(_appDispatcher);
 
+	var _actions = __webpack_require__(165);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -20642,8 +20659,6 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var IS_DRAGGING_CHANGED = 'isDraggingChanged';
-	var CURSOR_POSITION_CHANGED = 'cursorPositionChanged';
 	var _draggingStoreInstance = null;
 
 	/**
@@ -20666,7 +20681,6 @@
 
 	        var vm = _this;
 
-	        vm._draggingDispatcher = new _draggingDispatcher2.default();
 	        vm._isDragging = false;
 	        vm._position = { top: 0, left: 0 };
 	        vm._currentField = [0, 0];
@@ -20683,7 +20697,7 @@
 	        vm.removeCursorPositionWatcher = removeCursorPositionWatcher;
 	        vm.dispatcherIndex = registerDispatcher();
 
-	        return _ret = _this, _possibleConstructorReturn(_this, _ret);
+	        return _ret = vm, _possibleConstructorReturn(_this, _ret);
 
 	        /**
 	         * Emit dragging change
@@ -20691,7 +20705,7 @@
 	         */
 	        function emitCursorPositionChange(position) {
 	            vm._position = position;
-	            vm.emit(CURSOR_POSITION_CHANGED, position);
+	            vm.emit(_actions.ACTION_CURSOR_POSITION_CHANGED, position);
 	        }
 
 	        /**
@@ -20730,16 +20744,14 @@
 	         */
 	        function emitDraggingChange(isDragging) {
 	            vm._isDragging = isDragging;
-	            vm.emit(IS_DRAGGING_CHANGED, isDragging);
+	            vm.emit(_actions.ACTION_IS_DRAGGING_CHANGED, isDragging);
 	        }
 
 	        /**
 	         * @param {Function} callback
 	         */
 	        function addIsDraggingWatcher(callback) {
-	            console.log('add is dragging watcher');
-
-	            vm.on(IS_DRAGGING_CHANGED, callback);
+	            vm.on(_actions.ACTION_IS_DRAGGING_CHANGED, callback);
 	        }
 
 	        /**
@@ -20747,21 +20759,21 @@
 	         * @param {Function} callback
 	         */
 	        function removeIsDraggingWatcher(callback) {
-	            vm.off(IS_DRAGGING_CHANGED, callback);
+	            vm.off(_actions.ACTION_IS_DRAGGING_CHANGED, callback);
 	        }
 
 	        /**
 	         * @param {Function} callback
 	         */
 	        function addCursorPositionWatcher(callback) {
-	            vm.on(CURSOR_POSITION_CHANGED, callback);
+	            vm.on(_actions.ACTION_CURSOR_POSITION_CHANGED, callback);
 	        }
 
 	        /**
 	         * @param {Function} callback
 	         */
 	        function removeCursorPositionWatcher(callback) {
-	            vm.off(CURSOR_POSITION_CHANGED, callback);
+	            vm.off(_actions.ACTION_CURSOR_POSITION_CHANGED, callback);
 	        }
 
 	        /**
@@ -20774,11 +20786,11 @@
 	                // TODO constants
 	                switch (action.actionType) {
 
-	                    case CURSOR_POSITION_CHANGED:
+	                    case _actions.ACTION_CURSOR_POSITION_CHANGED:
 	                        emitCursorPositionChange(action.position);
 	                        break;
 
-	                    case IS_DRAGGING_CHANGED:
+	                    case _actions.ACTION_IS_DRAGGING_CHANGED:
 	                        emitDraggingChange(action.isDragging);
 	                        break;
 	                }
@@ -20809,80 +20821,6 @@
 	}(_eventEmitter2.default);
 
 	exports.default = DraggingStore;
-
-/***/ },
-/* 168 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _flux = __webpack_require__(162);
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * DraggingDispatcher class
-	 */
-
-	var DraggingDispatcher = function (_Dispatcher) {
-	    _inherits(DraggingDispatcher, _Dispatcher);
-
-	    /**
-	     * When a draggingDispatcher gets created
-	     */
-
-	    function DraggingDispatcher() {
-	        _classCallCheck(this, DraggingDispatcher);
-
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DraggingDispatcher).call(this));
-
-	        _this._callbacks = [];
-	        return _this;
-	    }
-
-	    _createClass(DraggingDispatcher, [{
-	        key: 'dispatch',
-	        value: function dispatch() {
-	            this._callbacks.forEach(function (callback) {
-	                return callback();
-	            });
-	        }
-	    }, {
-	        key: 'register',
-	        value: function register(callback) {
-	            if (typeof callback !== 'function') {
-	                throw new Error('Please provide a valid callback to register the dispatcher');
-	            }
-
-	            this._callbacks.push(callback);
-	        }
-
-	        /**
-	         * Remove a callback from the collection
-	         * @param {Function} callback
-	         */
-
-	    }, {
-	        key: 'unregister',
-	        value: function unregister(callback) {
-	            this._callbacks.splice(this._callbacks.indexOf(callback), 1);
-	        }
-	    }]);
-
-	    return DraggingDispatcher;
-	}(_flux.Dispatcher);
-
-	exports.default = DraggingDispatcher;
 
 /***/ },
 /* 169 */
@@ -21278,11 +21216,11 @@
 
 	'use strict';
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(1);
 
@@ -21414,17 +21352,97 @@
 
 /***/ },
 /* 186 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-	'use strict';
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var _chessHelperInstance = null;
+
+	/**
+	 * ChessHelper class
+	 */
+
+	var ChessHelper = function () {
+	    /**
+	     * ChessHelper constructor
+	     */
+
+	    function ChessHelper() {
+	        _classCallCheck(this, ChessHelper);
+
+	        return {
+	            calculatePotentialPlaces: calculatePotentialPlaces,
+	            canMoveHere: canMoveHere
+	        };
+
+	        /**
+	         * Calculate all places a piece can be moved to
+	         * @param {Number} row
+	         * @param {Number} column
+	         */
+	        function calculatePotentialPlaces(row, column) {
+
+	            // TODO use Math.pow here
+	            return [row + 1 + "|" + (column + 2), row - 1 + "|" + (column + 2), row - 1 + "|" + (column - 2), row + 1 + "|" + (column - 2), row + 2 + "|" + (column + 1), row - 2 + "|" + (column + 1), row - 2 + "|" + (column - 1), row + 2 + "|" + (column - 1)];
+	        }
+
+	        /**
+	         * Check if the piece can be moved to this position
+	         * @param {Number} fromRow
+	         * @param {Number} fromColumn
+	         * @param {Number} toRow
+	         * @param {Number} toColumn
+	         */
+	        function canMoveHere(fromRow, fromColumn, toRow, toColumn) {
+	            var indexToFind = toRow + "|" + toColumn;
+
+	            return calculatePotentialPlaces(fromRow, fromColumn).indexOf(indexToFind) > -1;
+	        }
+	    }
+
+	    /**
+	     * Singleton
+	     * @static
+	     * @returns {*}
+	     */
+
+	    _createClass(ChessHelper, null, [{
+	        key: "getInstance",
+	        value: function getInstance() {
+	            if (_chessHelperInstance === null) {
+	                _chessHelperInstance = new ChessHelper();
+	            }
+
+	            return _chessHelperInstance;
+	        }
+	    }]);
+
+	    return ChessHelper;
+	}();
+
+	exports.default = ChessHelper;
+
+/***/ },
+/* 187 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(1);
 
@@ -21473,18 +21491,18 @@
 	exports.default = ReactIf;
 
 /***/ },
-/* 187 */
+/* 188 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
 	var _react = __webpack_require__(1);
 
@@ -21494,7 +21512,7 @@
 
 	var _chessPiece2 = _interopRequireDefault(_chessPiece);
 
-	var _draggingStore = __webpack_require__(167);
+	var _draggingStore = __webpack_require__(168);
 
 	var _draggingStore2 = _interopRequireDefault(_draggingStore);
 
@@ -21581,7 +21599,11 @@
 	    }, {
 	        key: '_onCursorPositionChanged',
 	        value: function _onCursorPositionChanged(position) {
-	            this.setState(position);
+	            try {
+	                this.setState(position);
+	            } catch (ex) {
+	                // ...
+	            }
 	        }
 	    }]);
 

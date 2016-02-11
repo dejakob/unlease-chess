@@ -1,5 +1,10 @@
 import AppDispatcher from '../dispatcher/app-dispatcher';
 
+import {
+    ACTION_CURSOR_POSITION_CHANGED,
+    ACTION_IS_DRAGGING_CHANGED
+} from '../constants/actions';
+
 export default {
     /**
      * Change isDragging
@@ -7,8 +12,7 @@ export default {
      */
     changeDragging (isDragging) {
         AppDispatcher.getInstance().handleViewAction({
-            // TODO constant
-            actionType: 'isDraggingChanged',
+            actionType: ACTION_IS_DRAGGING_CHANGED,
             isDragging
         });
     },
@@ -19,8 +23,7 @@ export default {
      */
     changeCursorPosition (position) {
         AppDispatcher.getInstance().handleViewAction({
-            // TODO constant
-            actionType: 'cursorPositionChanged',
+            actionType: ACTION_CURSOR_POSITION_CHANGED,
             position
         });
     }

@@ -20,8 +20,6 @@ export default class AppDispatcher extends Dispatcher
          * @param {Object} action
          */
         function handleViewAction (action) {
-            console.log('HANDLE VIEW ACTION', action);
-
             vm.dispatch({
                 source: 'VIEW_ACTION',
                 action

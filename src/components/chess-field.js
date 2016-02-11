@@ -1,6 +1,7 @@
 import * as React from 'react';
 import DraggingStore from '../stores/dragging-store';
 import ChessPiece from './chess-piece';
+import ChessHelper from '../helpers/chess-helper';
 import If from './react-if';
 import { STYLE } from '../constants/style';
 
@@ -68,12 +69,23 @@ export default class ChessField extends React.Component
      * @private
      */
     _cursorPositionChanged (position) {
-        const active = position.x > this.left &&
+        const hasHover = position.x > this.left &&
             position.x < this.right &&
             position.y > this.top &&
             position.y < this.bottom;
+        const currentRow = DraggingStore.getInstance().getCurrentField()[0];
+        const currentColumn = DraggingStore.getInstance().getCurrentField()[1];
 
-        this.setState({ active });
+        if (
+            hasHover &&
+            ChessHelper.getInstance()
+                .canMoveHere(currentRow, currentColumn, this.props.row, this.props.column)
+        ) {
+            this.setState({ active: true });
+        }
+        else {
+            this.setState({ active: false });
+        }
     }
 
     /**
@@ -84,7 +96,6 @@ export default class ChessField extends React.Component
     _isDraggingChanged (isDragging) {
         if (isDragging === false) {
             if (this.state.active) {
-                console.log('THIS', this.props);
                 DraggingStore.getInstance().setCurrentField([
                     this.props.row, this.props.column
                 ]);
