@@ -9,12 +9,11 @@ export default class ReactIf extends React.Component
     render () {
         if (
             typeof this.props.condition !== 'boolean' ||
-            typeof this.props.children !== 'object'
+            typeof this.props.children !== 'object' ||
+            this.props.children === null
         ) {
             throw new Error('Please provide a condition and result');
         }
-
-        console.log('props condition', this.props.condition);
 
         if (this.props.condition) {
             return this.props.children;

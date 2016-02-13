@@ -21473,11 +21473,9 @@
 	         * @returns {*}
 	         */
 	        value: function render() {
-	            if (typeof this.props.condition !== 'boolean' || _typeof(this.props.children) !== 'object') {
+	            if (typeof this.props.condition !== 'boolean' || _typeof(this.props.children) !== 'object' || this.props.children === null) {
 	                throw new Error('Please provide a condition and result');
 	            }
-
-	            console.log('props condition', this.props.condition);
 
 	            if (this.props.condition) {
 	                return this.props.children;
