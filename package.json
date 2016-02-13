@@ -13,7 +13,9 @@
     ],
     "collectCoverage": true,
     "testDirectoryName": "spec",
-    "moduleFileExtensions": ["js"],
+    "moduleFileExtensions": [
+      "js"
+    ],
     "collectCoverageOnlyFrom": {
       "src/actions/dragging-actions.js": true,
       "src/components/chess-board.js": true,
@@ -64,6 +66,7 @@
     "jest": "^0.1.40",
     "jest-cli": "^0.8.2",
     "react": "^0.14.7",
+    "react-addons-test-utils": "^0.14.7",
     "react-dom": "^0.14.7"
   },
   "devDependencies": {

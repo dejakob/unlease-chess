@@ -14,6 +14,8 @@ export default class ReactIf extends React.Component
             throw new Error('Please provide a condition and result');
         }
 
+        console.log('props condition', this.props.condition);
+
         if (this.props.condition) {
             return this.props.children;
         }
