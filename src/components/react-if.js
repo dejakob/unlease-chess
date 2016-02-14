@@ -4,7 +4,7 @@ export default class ReactIf extends React.Component
 {
     /**
      * Render method of the if component
-     * @returns {*}
+     * @returns {Object}
      */
     render () {
         if (

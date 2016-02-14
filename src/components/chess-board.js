@@ -16,7 +16,8 @@ export default class ChessBoard extends React.Component
      */
     componentDidMount () {
         this._isDragging = false;
-        DraggingStore.getInstance()
+        DraggingStore
+            .getInstance()
             .addIsDraggingWatcher(this._draggingStateChanged);
     }
 
@@ -24,7 +25,8 @@ export default class ChessBoard extends React.Component
      * Just before deactivating the component
      */
     componentWillUnmount () {
-        DraggingStore.getInstance()
+        DraggingStore
+            .getInstance()
             .removeIsDraggingWatcher(this._draggingStateChanged);
     }
 

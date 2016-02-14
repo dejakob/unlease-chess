@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import ReactDOMServer from 'react-dom/server';
 import TestUtils from 'react-addons-test-utils';
 
@@ -14,7 +13,7 @@ describe('ReactIf component', () => {
         expect(If).toBeDefined();
     });
 
-    iit('should throw an error when no condition or children were defined', () => {
+    it('should throw an error when no condition or children were defined', () => {
         let renderer = () => ReactDOMServer
             .renderToStaticMarkup(React.createElement(
                 If,

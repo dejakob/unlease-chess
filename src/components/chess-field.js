@@ -1,8 +1,6 @@
 import * as React from 'react';
 import DraggingStore from '../stores/dragging-store';
-import ChessPiece from './chess-piece';
 import ChessHelper from '../helpers/chess-helper';
-import If from './react-if';
 import { STYLE } from '../constants/style';
 
 /**
@@ -14,6 +12,7 @@ export default class ChessField extends React.Component
      * When the component gets activated
      */
     componentDidMount () {
+        // TODO prop validation
         this.originalBackground = this.props.background;
         this.top = this.props.row * this.props.size;
         this.left = this.props.column * this.props.size;
@@ -34,33 +33,6 @@ export default class ChessField extends React.Component
             .removeCursorPositionWatcher(this._cursorPositionChanged.bind(this));
         DraggingStore.getInstance()
             .removeIsDraggingWatcher(this._isDraggingChanged.bind(this));
-    }
-
-    /**
-     * Render the component
-     */
-    render () {
-        // TODO default value with constants
-        let background = this.props.background;
-        const height = `${this.props.size}px`;
-        const width = `${this.props.size}px`;
-        const float = 'left';
-
-        if (typeof this.state === 'object' && this.state !== null && this.state.active === true) {
-            background = STYLE.CHESS_FIELD.COLORS.ACTIVE;
-        }
-
-        const style = {
-            background, height, width, float
-        };
-
-        return (
-            <div
-              style={ style }
-            >
-                {this.props.children}
-            </div>
-        );
     }
 
     /**
@@ -103,5 +75,36 @@ export default class ChessField extends React.Component
 
             this.setState({ active: false });
         }
+    }
+
+    /**
+     * Render the component
+     */
+    render () {
+        // TODO default value with constants
+        let background = this.props.background;
+        const height = `${this.props.size}px`;
+        const width = `${this.props.size}px`;
+        const float = 'left';
+
+        if (
+            typeof this.state === 'object' &&
+            this.state !== null &&
+            this.state.active === true
+        ) {
+            background = STYLE.CHESS_FIELD.COLORS.ACTIVE;
+        }
+
+        const style = {
+            background, height, width, float
+        };
+
+        return (
+            <div
+              style={ style }
+            >
+                {this.props.children}
+            </div>
+        );
     }
 }

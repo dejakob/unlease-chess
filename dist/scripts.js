@@ -20323,7 +20323,7 @@
 
 	var _chessField2 = _interopRequireDefault(_chessField);
 
-	var _chessPiece = __webpack_require__(184);
+	var _chessPiece = __webpack_require__(186);
 
 	var _chessPiece2 = _interopRequireDefault(_chessPiece);
 
@@ -20490,17 +20490,9 @@
 
 	var _draggingStore2 = _interopRequireDefault(_draggingStore);
 
-	var _chessPiece = __webpack_require__(184);
-
-	var _chessPiece2 = _interopRequireDefault(_chessPiece);
-
-	var _chessHelper = __webpack_require__(186);
+	var _chessHelper = __webpack_require__(184);
 
 	var _chessHelper2 = _interopRequireDefault(_chessHelper);
-
-	var _reactIf = __webpack_require__(187);
-
-	var _reactIf2 = _interopRequireDefault(_reactIf);
 
 	var _style = __webpack_require__(185);
 
@@ -20534,6 +20526,7 @@
 	         * When the component gets activated
 	         */
 	        value: function componentDidMount() {
+	            // TODO prop validation
 	            this.originalBackground = this.props.background;
 	            this.top = this.props.row * this.props.size;
 	            this.left = this.props.column * this.props.size;
@@ -20553,36 +20546,6 @@
 	        value: function componentWillUnmount() {
 	            _draggingStore2.default.getInstance().removeCursorPositionWatcher(this._cursorPositionChanged.bind(this));
 	            _draggingStore2.default.getInstance().removeIsDraggingWatcher(this._isDraggingChanged.bind(this));
-	        }
-
-	        /**
-	         * Render the component
-	         */
-
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            // TODO default value with constants
-	            var background = this.props.background;
-	            var height = this.props.size + 'px';
-	            var width = this.props.size + 'px';
-	            var float = 'left';
-
-	            if (_typeof(this.state) === 'object' && this.state !== null && this.state.active === true) {
-	                background = _style.STYLE.CHESS_FIELD.COLORS.ACTIVE;
-	            }
-
-	            var style = {
-	                background: background, height: height, width: width, float: float
-	            };
-
-	            return React.createElement(
-	                'div',
-	                {
-	                    style: style
-	                },
-	                this.props.children
-	            );
 	        }
 
 	        /**
@@ -20621,6 +20584,36 @@
 
 	                this.setState({ active: false });
 	            }
+	        }
+
+	        /**
+	         * Render the component
+	         */
+
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            // TODO default value with constants
+	            var background = this.props.background;
+	            var height = this.props.size + 'px';
+	            var width = this.props.size + 'px';
+	            var float = 'left';
+
+	            if (_typeof(this.state) === 'object' && this.state !== null && this.state.active === true) {
+	                background = _style.STYLE.CHESS_FIELD.COLORS.ACTIVE;
+	            }
+
+	            var style = {
+	                background: background, height: height, width: width, float: float
+	            };
+
+	            return React.createElement(
+	                'div',
+	                {
+	                    style: style
+	                },
+	                this.props.children
+	            );
 	        }
 	    }]);
 
@@ -21212,6 +21205,111 @@
 
 /***/ },
 /* 184 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var _chessHelperInstance = null;
+
+	/**
+	 * ChessHelper class
+	 */
+
+	var ChessHelper = function () {
+	    /**
+	     * ChessHelper constructor
+	     */
+
+	    function ChessHelper() {
+	        _classCallCheck(this, ChessHelper);
+
+	        return {
+	            calculatePotentialPlaces: calculatePotentialPlaces,
+	            canMoveHere: canMoveHere
+	        };
+
+	        /**
+	         * Calculate all places a piece can be moved to
+	         * @param {Number} row
+	         * @param {Number} column
+	         */
+	        function calculatePotentialPlaces(row, column) {
+
+	            // TODO use Math.pow here
+	            return [row + 1 + "|" + (column + 2), row - 1 + "|" + (column + 2), row - 1 + "|" + (column - 2), row + 1 + "|" + (column - 2), row + 2 + "|" + (column + 1), row - 2 + "|" + (column + 1), row - 2 + "|" + (column - 1), row + 2 + "|" + (column - 1)];
+	        }
+
+	        /**
+	         * Check if the piece can be moved to this position
+	         * @param {Number} fromRow
+	         * @param {Number} fromColumn
+	         * @param {Number} toRow
+	         * @param {Number} toColumn
+	         */
+	        function canMoveHere(fromRow, fromColumn, toRow, toColumn) {
+	            var indexToFind = toRow + "|" + toColumn;
+
+	            return calculatePotentialPlaces(fromRow, fromColumn).indexOf(indexToFind) > -1;
+	        }
+	    }
+
+	    /**
+	     * Singleton
+	     * @static
+	     * @returns {*}
+	     */
+
+	    _createClass(ChessHelper, null, [{
+	        key: "getInstance",
+	        value: function getInstance() {
+	            if (_chessHelperInstance === null) {
+	                _chessHelperInstance = new ChessHelper();
+	            }
+
+	            return _chessHelperInstance;
+	        }
+	    }]);
+
+	    return ChessHelper;
+	}();
+
+	exports.default = ChessHelper;
+
+/***/ },
+/* 185 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var STYLE = exports.STYLE = {
+	    CHESS_FIELD: {
+	        COLORS: {
+	            ACTIVE: '#A8DAFD',
+	            DARK: '#000000',
+	            LIGHT: '#FFFFFF'
+	        }
+	    },
+	    CHESS_PIECE: {
+	        BACKGROUND: 'url(dist/images/chess-piece.jpg)'
+	    },
+	    CHESS_KING: {
+	        BACKGROUND: 'url(dist/images/chess-king.jpg)'
+	    }
+	};
+
+/***/ },
+/* 186 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21326,111 +21424,6 @@
 	exports.default = ChessPiece;
 
 /***/ },
-/* 185 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	var STYLE = exports.STYLE = {
-	    CHESS_FIELD: {
-	        COLORS: {
-	            ACTIVE: '#A8DAFD',
-	            DARK: '#000000',
-	            LIGHT: '#FFFFFF'
-	        }
-	    },
-	    CHESS_PIECE: {
-	        BACKGROUND: 'url(dist/images/chess-piece.jpg)'
-	    },
-	    CHESS_KING: {
-	        BACKGROUND: 'url(dist/images/chess-king.jpg)'
-	    }
-	};
-
-/***/ },
-/* 186 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var _chessHelperInstance = null;
-
-	/**
-	 * ChessHelper class
-	 */
-
-	var ChessHelper = function () {
-	    /**
-	     * ChessHelper constructor
-	     */
-
-	    function ChessHelper() {
-	        _classCallCheck(this, ChessHelper);
-
-	        return {
-	            calculatePotentialPlaces: calculatePotentialPlaces,
-	            canMoveHere: canMoveHere
-	        };
-
-	        /**
-	         * Calculate all places a piece can be moved to
-	         * @param {Number} row
-	         * @param {Number} column
-	         */
-	        function calculatePotentialPlaces(row, column) {
-
-	            // TODO use Math.pow here
-	            return [row + 1 + "|" + (column + 2), row - 1 + "|" + (column + 2), row - 1 + "|" + (column - 2), row + 1 + "|" + (column - 2), row + 2 + "|" + (column + 1), row - 2 + "|" + (column + 1), row - 2 + "|" + (column - 1), row + 2 + "|" + (column - 1)];
-	        }
-
-	        /**
-	         * Check if the piece can be moved to this position
-	         * @param {Number} fromRow
-	         * @param {Number} fromColumn
-	         * @param {Number} toRow
-	         * @param {Number} toColumn
-	         */
-	        function canMoveHere(fromRow, fromColumn, toRow, toColumn) {
-	            var indexToFind = toRow + "|" + toColumn;
-
-	            return calculatePotentialPlaces(fromRow, fromColumn).indexOf(indexToFind) > -1;
-	        }
-	    }
-
-	    /**
-	     * Singleton
-	     * @static
-	     * @returns {*}
-	     */
-
-	    _createClass(ChessHelper, null, [{
-	        key: "getInstance",
-	        value: function getInstance() {
-	            if (_chessHelperInstance === null) {
-	                _chessHelperInstance = new ChessHelper();
-	            }
-
-	            return _chessHelperInstance;
-	        }
-	    }]);
-
-	    return ChessHelper;
-	}();
-
-	exports.default = ChessHelper;
-
-/***/ },
 /* 187 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -21470,7 +21463,7 @@
 
 	        /**
 	         * Render method of the if component
-	         * @returns {*}
+	         * @returns {Object}
 	         */
 	        value: function render() {
 	            if (typeof this.props.condition !== 'boolean' || _typeof(this.props.children) !== 'object' || this.props.children === null) {
@@ -21508,7 +21501,7 @@
 
 	var React = _interopRequireWildcard(_react);
 
-	var _chessPiece = __webpack_require__(184);
+	var _chessPiece = __webpack_require__(186);
 
 	var _chessPiece2 = _interopRequireDefault(_chessPiece);
 
