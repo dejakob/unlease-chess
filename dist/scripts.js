@@ -20452,10 +20452,6 @@
 
 	var _draggingStore2 = _interopRequireDefault(_draggingStore);
 
-	var _chessHelper = __webpack_require__(184);
-
-	var _chessHelper2 = _interopRequireDefault(_chessHelper);
-
 	var _style = __webpack_require__(186);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -20523,7 +20519,7 @@
 	            var currentRow = _draggingStore2.default.getInstance().getCurrentField()[0];
 	            var currentColumn = _draggingStore2.default.getInstance().getCurrentField()[1];
 
-	            if (hasHover && _chessHelper2.default.getInstance().canMoveHere(currentRow, currentColumn, this.props.row, this.props.column)) {
+	            if (hasHover && ChessHelper.getInstance().canMoveHere(currentRow, currentColumn, this.props.row, this.props.column)) {
 	                this.setState({ active: true });
 	            } else {
 	                this.setState({ active: false });
@@ -20542,7 +20538,6 @@
 	            if (isDragging === false) {
 	                if (this.state.active) {
 	                    _draggingStore2.default.getInstance().setCurrentField([this.props.row, this.props.column]);
-	                    _chessHelper2.default.getInstance().savePosition(this.props.row, this.props.column);
 	                }
 
 	                this.setState({ active: false });
@@ -20698,6 +20693,7 @@
 	         */
 	        function setCurrentField(field) {
 	            vm._currentField = field;
+	            _chessHelper2.default.getInstance().savePosition(field[0], field[1]);
 	        }
 
 	        /**

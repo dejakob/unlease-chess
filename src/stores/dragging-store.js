@@ -78,6 +78,7 @@ export default class DraggingStore extends EventEmitter
          */
         function setCurrentField (field) {
             vm._currentField = field;
+            ChessHelper.getInstance().savePosition(field[0], field[1]);
         }
 
         /**
