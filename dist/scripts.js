@@ -19742,7 +19742,7 @@
 
 	var _chessBoard2 = _interopRequireDefault(_chessBoard);
 
-	var _chessPiecePreview = __webpack_require__(188);
+	var _chessPiecePreview = __webpack_require__(189);
 
 	var _chessPiecePreview2 = _interopRequireDefault(_chessPiecePreview);
 
@@ -19750,7 +19750,7 @@
 
 	var _draggingStore2 = _interopRequireDefault(_draggingStore);
 
-	var _reactIf = __webpack_require__(187);
+	var _reactIf = __webpack_require__(188);
 
 	var _reactIf2 = _interopRequireDefault(_reactIf);
 
@@ -20323,7 +20323,7 @@
 
 	var _chessField2 = _interopRequireDefault(_chessField);
 
-	var _chessPiece = __webpack_require__(186);
+	var _chessPiece = __webpack_require__(187);
 
 	var _chessPiece2 = _interopRequireDefault(_chessPiece);
 
@@ -20335,11 +20335,11 @@
 
 	var _draggingStore2 = _interopRequireDefault(_draggingStore);
 
-	var _reactIf = __webpack_require__(187);
+	var _reactIf = __webpack_require__(188);
 
 	var _reactIf2 = _interopRequireDefault(_reactIf);
 
-	var _style = __webpack_require__(185);
+	var _style = __webpack_require__(186);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -20456,7 +20456,7 @@
 
 	var _chessHelper2 = _interopRequireDefault(_chessHelper);
 
-	var _style = __webpack_require__(185);
+	var _style = __webpack_require__(186);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -21167,9 +21167,9 @@
 
 /***/ },
 /* 184 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -21177,7 +21177,15 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+	var _localStorageHelper = __webpack_require__(185);
+
+	var _localStorageHelper2 = _interopRequireDefault(_localStorageHelper);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var LS_KEY_POSITION = 'POSITION';
 
 	var _chessHelperInstance = null;
 
@@ -21195,7 +21203,10 @@
 
 	        return {
 	            calculatePotentialPlaces: calculatePotentialPlaces,
-	            canMoveHere: canMoveHere
+	            canMoveHere: canMoveHere,
+
+	            savePosition: savePosition,
+	            getSavedPosition: getSavedPosition
 	        };
 
 	        /**
@@ -21206,7 +21217,7 @@
 	        function calculatePotentialPlaces(row, column) {
 
 	            // TODO use Math.pow here
-	            return [row + 1 + "|" + (column + 2), row - 1 + "|" + (column + 2), row - 1 + "|" + (column - 2), row + 1 + "|" + (column - 2), row + 2 + "|" + (column + 1), row - 2 + "|" + (column + 1), row - 2 + "|" + (column - 1), row + 2 + "|" + (column - 1)];
+	            return [row + 1 + '|' + (column + 2), row - 1 + '|' + (column + 2), row - 1 + '|' + (column - 2), row + 1 + '|' + (column - 2), row + 2 + '|' + (column + 1), row - 2 + '|' + (column + 1), row - 2 + '|' + (column - 1), row + 2 + '|' + (column - 1)];
 	        }
 
 	        /**
@@ -21217,9 +21228,35 @@
 	         * @param {Number} toColumn
 	         */
 	        function canMoveHere(fromRow, fromColumn, toRow, toColumn) {
-	            var indexToFind = toRow + "|" + toColumn;
+	            var indexToFind = toRow + '|' + toColumn;
 
 	            return calculatePotentialPlaces(fromRow, fromColumn).indexOf(indexToFind) > -1;
+	        }
+
+	        /**
+	         * Save the position of the piece to LocalStorage
+	         * @param {Number} row
+	         * @param {Number} column
+	         */
+	        function savePosition(row, column) {
+	            _localStorageHelper2.default.put(LS_KEY_POSITION, row + '|' + column);
+	        }
+
+	        /**
+	         * Get the saved position of the piece from the LocalStorage
+	         * @returns {{row: number, column: number}}
+	         */
+	        function getSavedPosition() {
+	            var savedResult = _localStorageHelper2.default.get(LS_KEY_POSITION);
+
+	            if (savedResult && savedResult.indexOf('|') > -1) {
+	                return {
+	                    row: Number(savedResult.split('|')[0]),
+	                    column: Number(savedResult.split('|')[1])
+	                };
+	            }
+
+	            return { row: 0, column: 0 };
 	        }
 	    }
 
@@ -21230,7 +21267,7 @@
 	     */
 
 	    _createClass(ChessHelper, null, [{
-	        key: "getInstance",
+	        key: 'getInstance',
 	        value: function getInstance() {
 	            if (_chessHelperInstance === null) {
 	                _chessHelperInstance = new ChessHelper();
@@ -21247,6 +21284,87 @@
 
 /***/ },
 /* 185 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var LocalStorageHelper = function () {
+	    function LocalStorageHelper() {
+	        _classCallCheck(this, LocalStorageHelper);
+	    }
+
+	    _createClass(LocalStorageHelper, null, [{
+	        key: 'isSupportedByBrowser',
+
+	        /**
+	         * Check if the current browser supports local storage
+	         * @returns {Boolean}
+	         */
+	        value: function isSupportedByBrowser() {
+	            return _typeof(window.localStorage) !== 'object' && window.localStorage !== null;
+	        }
+
+	        /**
+	         * Get a value by its key from the local storage
+	         * @param {String} key
+	         */
+
+	    }, {
+	        key: 'get',
+	        value: function get(key) {
+	            if (!LocalStorageHelper.isSupportedByBrowser()) {
+	                throw new Error('Local Storage is not supported in this browser');
+	            }
+
+	            if (typeof key !== 'string') {
+	                throw new Error('Please enter a valid key to get data from the local storage');
+	            }
+
+	            window.localStorage.getItem(key);
+	        }
+
+	        /**
+	         * Put something into the local storage
+	         * @param {String} key
+	         * @param {String} value
+	         */
+
+	    }, {
+	        key: 'put',
+	        value: function put(key, value) {
+	            if (!LocalStorageHelper.isSupportedByBrowser()) {
+	                throw new Error('Local Storage is not supported in this browser');
+	            }
+
+	            if (typeof key !== 'string') {
+	                throw new Error('Please enter a valid key to set data to the local storage');
+	            }
+
+	            if (typeof value !== 'string') {
+	                throw new Error('Please enter a valid string to save into the local storage');
+	            }
+
+	            window.localStorage.setItem(key, value);
+	        }
+	    }]);
+
+	    return LocalStorageHelper;
+	}();
+
+	exports.default = LocalStorageHelper;
+
+/***/ },
+/* 186 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -21273,7 +21391,7 @@
 	};
 
 /***/ },
-/* 186 */
+/* 187 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21292,7 +21410,7 @@
 
 	var _draggingActions2 = _interopRequireDefault(_draggingActions);
 
-	var _style = __webpack_require__(185);
+	var _style = __webpack_require__(186);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -21388,7 +21506,7 @@
 	exports.default = ChessPiece;
 
 /***/ },
-/* 187 */
+/* 188 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21448,7 +21566,7 @@
 	exports.default = ReactIf;
 
 /***/ },
-/* 188 */
+/* 189 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21465,7 +21583,7 @@
 
 	var React = _interopRequireWildcard(_react);
 
-	var _chessPiece = __webpack_require__(186);
+	var _chessPiece = __webpack_require__(187);
 
 	var _chessPiece2 = _interopRequireDefault(_chessPiece);
 

@@ -1,3 +1,7 @@
+import LocalStorage from '../helpers/local-storage-helper';
+
+const LS_KEY_POSITION = 'POSITION';
+
 let _chessHelperInstance = null;
 
 /**
@@ -11,7 +15,10 @@ export default class ChessHelper
     constructor () {
         return {
             calculatePotentialPlaces,
-            canMoveHere
+            canMoveHere,
+
+            savePosition,
+            getSavedPosition
         };
 
         /**
@@ -46,6 +53,32 @@ export default class ChessHelper
 
             return calculatePotentialPlaces(fromRow, fromColumn)
                     .indexOf(indexToFind) > -1;
+        }
+
+        /**
+         * Save the position of the piece to LocalStorage
+         * @param {Number} row
+         * @param {Number} column
+         */
+        function savePosition (row, column) {
+            LocalStorage.put(LS_KEY_POSITION, `${row}|${column}`);
+        }
+
+        /**
+         * Get the saved position of the piece from the LocalStorage
+         * @returns {{row: number, column: number}}
+         */
+        function getSavedPosition () {
+            const savedResult = LocalStorage.get(LS_KEY_POSITION);
+
+            if (savedResult && savedResult.indexOf('|') > -1) {
+                return {
+                    row: Number(savedResult.split('|')[0]),
+                    column: Number(savedResult.split('|')[1])
+                };
+            }
+
+            return { row: 0, column: 0 };
         }
     }
 
