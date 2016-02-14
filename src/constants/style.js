@@ -5,6 +5,7 @@ export const STYLE = {
             DARK: '#000000',
             LIGHT: '#FFFFFF'
         },
+        BORDER: '1px #000000 solid',
         SIZE: 50
     },
     CHESS_PIECE: {

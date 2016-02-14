@@ -12,25 +12,6 @@ import { STYLE } from '../constants/style';
 export default class ChessBoard extends React.Component
 {
     /**
-     * When the component gets activated
-     */
-    componentDidMount () {
-        this._isDragging = false;
-        DraggingStore
-            .getInstance()
-            .addIsDraggingWatcher(this._draggingStateChanged);
-    }
-
-    /**
-     * Just before deactivating the component
-     */
-    componentWillUnmount () {
-        DraggingStore
-            .getInstance()
-            .removeIsDraggingWatcher(this._draggingStateChanged);
-    }
-
-    /**
      * Render the component
      */
     render () {
@@ -38,10 +19,11 @@ export default class ChessBoard extends React.Component
         const style = {
             height: size,
             width: size,
-            border: '1px #000000 solid'
+            border: STYLE.CHESS_FIELD.BORDER
         };
         const fields = [];
 
+        // 16 * 16: 16 rows, 16 columns
         for (let i = 0; i < Math.pow(16, 2); i++) {
             const row = Math.floor(i / 16);
             const column = i % 16;
@@ -79,17 +61,6 @@ export default class ChessBoard extends React.Component
             </div>
         );
     }
-
-    /**
-     * Start the dragging
-     * @private
-     */
-    _draggingStateChanged (isDragging) {
-        // TODO: move this to store and get isDragging with getter
-        // When doing that, binds can be removed from listeners
-        this._isDragging = isDragging;
-    }
-
     /**
      * Mouse up on chess board
      * @private

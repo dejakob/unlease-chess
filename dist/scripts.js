@@ -20365,41 +20365,21 @@
 	    }
 
 	    _createClass(ChessBoard, [{
-	        key: 'componentDidMount',
-
-	        /**
-	         * When the component gets activated
-	         */
-	        value: function componentDidMount() {
-	            this._isDragging = false;
-	            _draggingStore2.default.getInstance().addIsDraggingWatcher(this._draggingStateChanged);
-	        }
-
-	        /**
-	         * Just before deactivating the component
-	         */
-
-	    }, {
-	        key: 'componentWillUnmount',
-	        value: function componentWillUnmount() {
-	            _draggingStore2.default.getInstance().removeIsDraggingWatcher(this._draggingStateChanged);
-	        }
+	        key: 'render',
 
 	        /**
 	         * Render the component
 	         */
-
-	    }, {
-	        key: 'render',
 	        value: function render() {
 	            var size = _style.STYLE.CHESS_FIELD.SIZE * 16 + 'px';
 	            var style = {
 	                height: size,
 	                width: size,
-	                border: '1px #000000 solid'
+	                border: _style.STYLE.CHESS_FIELD.BORDER
 	            };
 	            var fields = [];
 
+	            // 16 * 16: 16 rows, 16 columns
 	            for (var i = 0; i < Math.pow(16, 2); i++) {
 	                var row = Math.floor(i / 16);
 	                var column = i % 16;
@@ -20433,20 +20413,6 @@
 	                fields
 	            );
 	        }
-
-	        /**
-	         * Start the dragging
-	         * @private
-	         */
-
-	    }, {
-	        key: '_draggingStateChanged',
-	        value: function _draggingStateChanged(isDragging) {
-	            // TODO: move this to store and get isDragging with getter
-	            // When doing that, binds can be removed from listeners
-	            this._isDragging = isDragging;
-	        }
-
 	        /**
 	         * Mouse up on chess board
 	         * @private
@@ -21295,6 +21261,7 @@
 	            DARK: '#000000',
 	            LIGHT: '#FFFFFF'
 	        },
+	        BORDER: '1px #000000 solid',
 	        SIZE: 50
 	    },
 	    CHESS_PIECE: {
