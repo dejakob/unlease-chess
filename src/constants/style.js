@@ -4,7 +4,8 @@ export const STYLE = {
             ACTIVE: '#A8DAFD',
             DARK: '#000000',
             LIGHT: '#FFFFFF'
-        }
+        },
+        SIZE: 50
     },
     CHESS_PIECE: {
         BACKGROUND: 'url(dist/images/chess-piece.jpg)'

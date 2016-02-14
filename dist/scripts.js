@@ -20392,17 +20392,14 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var size = 50 * 16 + 'px';
+	            var size = _style.STYLE.CHESS_FIELD.SIZE * 16 + 'px';
 	            var style = {
 	                height: size,
 	                width: size,
 	                border: '1px #000000 solid'
 	            };
-
 	            var fields = [];
 
-	            // TODO clean up
-	            // TODO use constants
 	            for (var i = 0; i < Math.pow(16, 2); i++) {
 	                var row = Math.floor(i / 16);
 	                var column = i % 16;
@@ -20410,7 +20407,6 @@
 	                var fieldKey = 'field' + i;
 	                var hasPiece = _draggingStore2.default.getInstance().getCurrentField()[0] === row && _draggingStore2.default.getInstance().getCurrentField()[1] === column;
 
-	                // TODO make iterator component
 	                fields.push(React.createElement(
 	                    _chessField2.default,
 	                    {
@@ -20418,7 +20414,7 @@
 	                        key: fieldKey,
 	                        row: row,
 	                        column: column,
-	                        size: 50
+	                        size: _style.STYLE.CHESS_FIELD.SIZE
 	                    },
 	                    React.createElement(
 	                        _reactIf2.default,
@@ -21298,7 +21294,8 @@
 	            ACTIVE: '#A8DAFD',
 	            DARK: '#000000',
 	            LIGHT: '#FFFFFF'
-	        }
+	        },
+	        SIZE: 50
 	    },
 	    CHESS_PIECE: {
 	        BACKGROUND: 'url(dist/images/chess-piece.jpg)'

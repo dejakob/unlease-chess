@@ -34,17 +34,14 @@ export default class ChessBoard extends React.Component
      * Render the component
      */
     render () {
-        const size = `${50 * 16}px`;
+        const size = `${STYLE.CHESS_FIELD.SIZE * 16}px`;
         const style = {
             height: size,
             width: size,
             border: '1px #000000 solid'
         };
-
         const fields = [];
 
-        // TODO clean up
-        // TODO use constants
         for (let i = 0; i < Math.pow(16, 2); i++) {
             const row = Math.floor(i / 16);
             const column = i % 16;
@@ -58,16 +55,15 @@ export default class ChessBoard extends React.Component
             const hasPiece = DraggingStore.getInstance().getCurrentField()[0] === row &&
                 DraggingStore.getInstance().getCurrentField()[1] === column;
 
-            // TODO make iterator component
             fields.push(
                 <ChessField
                   background={ background }
                   key={ fieldKey }
                   row={ row }
                   column={ column }
-                  size={ 50 }
+                  size={ STYLE.CHESS_FIELD.SIZE }
                 >
-                    <If condition={hasPiece}>
+                    <If condition={ hasPiece }>
                         <ChessPiece />
                     </If>
                 </ChessField>
