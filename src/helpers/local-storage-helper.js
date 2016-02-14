@@ -1,3 +1,6 @@
+/**
+ * Helper for Local Storage
+ */
 export default class LocalStorageHelper
 {
     /**

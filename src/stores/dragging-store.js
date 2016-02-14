@@ -1,5 +1,6 @@
 import EventEmitter from 'event-emitter';
 import AppDispatcher from '../dispatcher/app-dispatcher';
+import ChessHelper from '../helpers/chess-helper';
 
 import {
     ACTION_CURSOR_POSITION_CHANGED,
@@ -19,10 +20,11 @@ export default class DraggingStore extends EventEmitter
     constructor () {
         super();
         const vm = this;
+        const lastSavedPosition = ChessHelper.getInstance().getSavedPosition();
 
         vm._isDragging = false;
         vm._position = { top: 0, left: 0 };
-        vm._currentField = [0, 0];
+        vm._currentField = [lastSavedPosition.row, lastSavedPosition.column];
 
         vm.getIsDragging = getIsDragging;
         vm.getCurrentPosition = getCurrentPosition;
@@ -63,15 +65,16 @@ export default class DraggingStore extends EventEmitter
         }
 
         /**
-         * @returns {*}
+         * Get the current field row and column
+         * @returns {Array.<Number>}
          */
         function getCurrentField () {
             return vm._currentField;
         }
 
         /**
-         *
-         * @param field
+         * Set the current field row and column
+         * @param {Array.<Number>} field
          */
         function setCurrentField (field) {
             vm._currentField = field;

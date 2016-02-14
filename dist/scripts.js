@@ -19750,10 +19750,6 @@
 
 	var _draggingStore2 = _interopRequireDefault(_draggingStore);
 
-	var _chessHelper = __webpack_require__(184);
-
-	var _chessHelper2 = _interopRequireDefault(_chessHelper);
-
 	var _reactIf = __webpack_require__(188);
 
 	var _reactIf2 = _interopRequireDefault(_reactIf);
@@ -19795,10 +19791,6 @@
 	    _createClass(Game, [{
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
-	            var lastSavedPosition = _chessHelper2.default.getInstance().getSavedPosition();
-
-	            _draggingStore2.default.getInstance().setCurrentField([lastSavedPosition.row, lastSavedPosition.column]);
-
 	            _draggingStore2.default.getInstance().addIsDraggingWatcher(this._changePreviewVisibility.bind(this));
 	        }
 
@@ -20613,6 +20605,10 @@
 
 	var _appDispatcher2 = _interopRequireDefault(_appDispatcher);
 
+	var _chessHelper = __webpack_require__(184);
+
+	var _chessHelper2 = _interopRequireDefault(_chessHelper);
+
 	var _actions = __webpack_require__(165);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -20644,10 +20640,11 @@
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(DraggingStore).call(this));
 
 	        var vm = _this;
+	        var lastSavedPosition = _chessHelper2.default.getInstance().getSavedPosition();
 
 	        vm._isDragging = false;
 	        vm._position = { top: 0, left: 0 };
-	        vm._currentField = [0, 0];
+	        vm._currentField = [lastSavedPosition.row, lastSavedPosition.column];
 
 	        vm.getIsDragging = getIsDragging;
 	        vm.getCurrentPosition = getCurrentPosition;
@@ -20688,15 +20685,16 @@
 	        }
 
 	        /**
-	         * @returns {*}
+	         * Get the current field row and column
+	         * @returns {Array.<Number>}
 	         */
 	        function getCurrentField() {
 	            return vm._currentField;
 	        }
 
 	        /**
-	         *
-	         * @param field
+	         * Set the current field row and column
+	         * @param {Array.<Number>} field
 	         */
 	        function setCurrentField(field) {
 	            vm._currentField = field;
@@ -21305,6 +21303,10 @@
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * Helper for Local Storage
+	 */
 
 	var LocalStorageHelper = function () {
 	    function LocalStorageHelper() {
