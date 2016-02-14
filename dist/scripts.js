@@ -20538,7 +20538,7 @@
 	        key: '_isDraggingChanged',
 	        value: function _isDraggingChanged(isDragging) {
 	            if (isDragging === false) {
-	                if (this.state.active) {
+	                if (this.state && this.state.active) {
 	                    _draggingStore2.default.getInstance().setCurrentField([this.props.row, this.props.column]);
 	                }
 
@@ -21596,6 +21596,8 @@
 
 	var _draggingStore2 = _interopRequireDefault(_draggingStore);
 
+	var _style = __webpack_require__(186);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -21658,8 +21660,8 @@
 	                position: 'absolute',
 	                top: this.state.y + 'px',
 	                left: this.state.x + 'px',
-	                marginTop: '-25px',
-	                marginLeft: '-25px',
+	                marginTop: '-' + _style.STYLE.CHESS_FIELD.SIZE / 2 + 'px',
+	                marginLeft: '-' + _style.STYLE.CHESS_FIELD.SIZE / 2 + 'px',
 	                opacity: '0.5'
 	            };
 
@@ -21672,18 +21674,14 @@
 
 	        /**
 	         * When the position of the cursor changes over the board
-	         * @param position
+	         * @param {Object} position
 	         * @private
 	         */
 
 	    }, {
 	        key: '_onCursorPositionChanged',
 	        value: function _onCursorPositionChanged(position) {
-	            try {
-	                this.setState(position);
-	            } catch (ex) {
-	                // ...
-	            }
+	            this.setState(position);
 	        }
 	    }]);
 

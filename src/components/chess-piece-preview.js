@@ -1,6 +1,7 @@
 import * as React from 'react';
 import ChessPiece from './chess-piece';
 import DraggingStore from '../stores/dragging-store';
+import { STYLE } from '../constants/style';
 
 /**
  * ChessPiecePreview class
@@ -19,7 +20,8 @@ export default class ChessPiecePreview extends ChessPiece
      * When the component mounts
      */
     componentDidMount () {
-        DraggingStore.getInstance()
+        DraggingStore
+            .getInstance()
             .addCursorPositionWatcher(this._onCursorPositionChanged.bind(this));
     }
 
@@ -27,7 +29,8 @@ export default class ChessPiecePreview extends ChessPiece
      * Before the component unmounts
      */
     componentWillUnmount () {
-        DraggingStore.getInstance()
+        DraggingStore
+            .getInstance()
             .removeCursorPositionWatcher(this._onCursorPositionChanged.bind(this));
     }
 
@@ -40,8 +43,8 @@ export default class ChessPiecePreview extends ChessPiece
             position: 'absolute',
             top: `${this.state.y}px`,
             left: `${this.state.x}px`,
-            marginTop: '-25px',
-            marginLeft: '-25px',
+            marginTop: `-${STYLE.CHESS_FIELD.SIZE / 2}px`,
+            marginLeft: `-${STYLE.CHESS_FIELD.SIZE / 2}px`,
             opacity: '0.5'
         };
 
@@ -54,15 +57,10 @@ export default class ChessPiecePreview extends ChessPiece
 
     /**
      * When the position of the cursor changes over the board
-     * @param position
+     * @param {Object} position
      * @private
      */
     _onCursorPositionChanged (position) {
-        try {
-            this.setState(position);
-        }
-        catch (ex) {
-            // ...
-        }
+        this.setState(position);
     }
 }

@@ -65,7 +65,7 @@ export default class ChessField extends React.Component
      */
     _isDraggingChanged (isDragging) {
         if (isDragging === false) {
-            if (this.state.active) {
+            if (this.state && this.state.active) {
                 DraggingStore.getInstance().setCurrentField([
                     this.props.row, this.props.column
                 ]);
