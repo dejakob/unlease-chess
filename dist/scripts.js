@@ -20511,8 +20511,7 @@
 	        }
 
 	        /**
-	         *
-	         * @param position
+	         * @param {Object} position
 	         * @private
 	         */
 
@@ -20531,7 +20530,6 @@
 	        }
 
 	        /**
-	         *
 	         * @param {Boolean} isDragging
 	         * @private
 	         */
@@ -20555,7 +20553,6 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            // TODO default value with constants
 	            var background = this.props.background;
 	            var height = this.props.size + 'px';
 	            var width = this.props.size + 'px';
@@ -21221,8 +21218,6 @@
 	         * @param {Number} column
 	         */
 	        function calculatePotentialPlaces(row, column) {
-
-	            // TODO use Math.pow here
 	            return [row + 1 + '|' + (column + 2), row - 1 + '|' + (column + 2), row - 1 + '|' + (column - 2), row + 1 + '|' + (column - 2), row + 2 + '|' + (column + 1), row - 2 + '|' + (column + 1), row - 2 + '|' + (column - 1), row + 2 + '|' + (column - 1)];
 	        }
 

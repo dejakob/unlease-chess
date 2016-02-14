@@ -26,8 +26,6 @@ export default class ChessHelper
          * @param {Number} column
          */
         function calculatePotentialPlaces (row, column) {
-
-            // TODO use Math.pow here
             return [
                 `${row + 1}|${column + 2}`,
                 `${row - 1}|${column + 2}`,

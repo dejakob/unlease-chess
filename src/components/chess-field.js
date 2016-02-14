@@ -36,8 +36,7 @@ export default class ChessField extends React.Component
     }
 
     /**
-     *
-     * @param position
+     * @param {Object} position
      * @private
      */
     _cursorPositionChanged (position) {
@@ -61,7 +60,6 @@ export default class ChessField extends React.Component
     }
 
     /**
-     *
      * @param {Boolean} isDragging
      * @private
      */
@@ -81,7 +79,6 @@ export default class ChessField extends React.Component
      * Render the component
      */
     render () {
-        // TODO default value with constants
         let background = this.props.background;
         const height = `${this.props.size}px`;
         const width = `${this.props.size}px`;
