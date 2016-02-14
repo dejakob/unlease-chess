@@ -1,5 +1,6 @@
 import * as React from 'react';
 import DraggingStore from '../stores/dragging-store';
+import ChessHelper from '../helpers/chess-helper';
 import { STYLE } from '../constants/style';
 
 /**
