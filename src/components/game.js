@@ -3,6 +3,7 @@ import Actions from '../actions/dragging-actions';
 import ChessBoard from './chess-board';
 import ChessPiecePreview from './chess-piece-preview';
 import DraggingStore from '../stores/dragging-store';
+import ChessHelper from '../helpers/chess-helper';
 import If from './react-if';
 
 /**
@@ -22,7 +23,14 @@ export default class Game extends React.Component
      * When the component mounted
      */
     componentDidMount () {
-        DraggingStore.getInstance()
+        const lastSavedPosition = ChessHelper.getInstance().getSavedPosition();
+
+        DraggingStore
+            .getInstance()
+            .setCurrentField([lastSavedPosition.row, lastSavedPosition.column]);
+
+        DraggingStore
+            .getInstance()
             .addIsDraggingWatcher(this._changePreviewVisibility.bind(this));
     }
 
@@ -30,7 +38,8 @@ export default class Game extends React.Component
      * When the component unmounts
      */
     componentWillUnmount () {
-        DraggingStore.getInstance()
+        DraggingStore
+            .getInstance()
             .removeIsDraggingWatcher(this._changePreviewVisibility.bind(this));
     }
 

@@ -19750,6 +19750,10 @@
 
 	var _draggingStore2 = _interopRequireDefault(_draggingStore);
 
+	var _chessHelper = __webpack_require__(184);
+
+	var _chessHelper2 = _interopRequireDefault(_chessHelper);
+
 	var _reactIf = __webpack_require__(188);
 
 	var _reactIf2 = _interopRequireDefault(_reactIf);
@@ -19791,6 +19795,10 @@
 	    _createClass(Game, [{
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
+	            var lastSavedPosition = _chessHelper2.default.getInstance().getSavedPosition();
+
+	            _draggingStore2.default.getInstance().setCurrentField([lastSavedPosition.row, lastSavedPosition.column]);
+
 	            _draggingStore2.default.getInstance().addIsDraggingWatcher(this._changePreviewVisibility.bind(this));
 	        }
 
@@ -20542,6 +20550,7 @@
 	            if (isDragging === false) {
 	                if (this.state.active) {
 	                    _draggingStore2.default.getInstance().setCurrentField([this.props.row, this.props.column]);
+	                    _chessHelper2.default.getInstance().savePosition(this.props.row, this.props.column);
 	                }
 
 	                this.setState({ active: false });
@@ -21186,7 +21195,6 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var LS_KEY_POSITION = 'POSITION';
-
 	var _chessHelperInstance = null;
 
 	/**
@@ -21263,7 +21271,7 @@
 	    /**
 	     * Singleton
 	     * @static
-	     * @returns {*}
+	     * @returns {ChessHelper}
 	     */
 
 	    _createClass(ChessHelper, null, [{
@@ -21311,7 +21319,7 @@
 	         * @returns {Boolean}
 	         */
 	        value: function isSupportedByBrowser() {
-	            return _typeof(window.localStorage) !== 'object' && window.localStorage !== null;
+	            return _typeof(window.localStorage) !== 'object' || window.localStorage !== null;
 	        }
 
 	        /**
@@ -21330,7 +21338,7 @@
 	                throw new Error('Please enter a valid key to get data from the local storage');
 	            }
 
-	            window.localStorage.getItem(key);
+	            return window.localStorage.getItem(key);
 	        }
 
 	        /**

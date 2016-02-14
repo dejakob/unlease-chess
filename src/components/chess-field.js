@@ -71,6 +71,7 @@ export default class ChessField extends React.Component
                 DraggingStore.getInstance().setCurrentField([
                     this.props.row, this.props.column
                 ]);
+                ChessHelper.getInstance().savePosition(this.props.row, this.props.column);
             }
 
             this.setState({ active: false });

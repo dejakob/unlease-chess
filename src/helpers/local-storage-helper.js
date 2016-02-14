@@ -5,7 +5,7 @@ export default class LocalStorageHelper
      * @returns {Boolean}
      */
     static isSupportedByBrowser () {
-        return typeof window.localStorage !== 'object' && window.localStorage !== null;
+        return typeof window.localStorage !== 'object' || window.localStorage !== null;
     }
 
     /**
@@ -21,7 +21,7 @@ export default class LocalStorageHelper
             throw new Error('Please enter a valid key to get data from the local storage');
         }
 
-        window.localStorage.getItem(key);
+        return window.localStorage.getItem(key);
     }
 
     /**

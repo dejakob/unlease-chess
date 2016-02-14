@@ -1,7 +1,6 @@
 import LocalStorage from '../helpers/local-storage-helper';
 
 const LS_KEY_POSITION = 'POSITION';
-
 let _chessHelperInstance = null;
 
 /**
@@ -85,7 +84,7 @@ export default class ChessHelper
     /**
      * Singleton
      * @static
-     * @returns {*}
+     * @returns {ChessHelper}
      */
     static getInstance () {
         if (_chessHelperInstance === null) {
