@@ -22,8 +22,11 @@ npm test
 ```
 
 ## Issues I ran into
-### Jest + ES2015
-I had a lot of issues to run jest in combination with ES2015 classes.
+### Jest + ES2015 classes
+* I had a lot of issues to run jest in combination with ES2015 classes.
 I found one workaround to unmock files: https://github.com/babel/babel-jest/issues/16 (See the files in spec/unmock).
-I had more issues with extending the classes and did not find a solution yet.
+
+* I had more issues with extending the classes and did not find a solution yet.
 Check out this issue on stackoverflow: http://stackoverflow.com/questions/35396983/jest-es2015-import.
+
+* I started out using Singleton Design Pattern
