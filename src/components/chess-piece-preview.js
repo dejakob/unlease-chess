@@ -3,6 +3,8 @@ import ChessPiece from './chess-piece';
 import DraggingStore from '../stores/dragging-store';
 import { STYLE } from '../constants/style';
 
+let _chessPiecePreview = null;
+
 /**
  * ChessPiecePreview class
  */
@@ -20,6 +22,8 @@ export default class ChessPiecePreview extends ChessPiece
      * When the component mounts
      */
     componentDidMount () {
+        _chessPiecePreview = this;
+
         DraggingStore
             .getInstance()
             .addCursorPositionWatcher(this._onCursorPositionChanged.bind(this));
@@ -61,6 +65,6 @@ export default class ChessPiecePreview extends ChessPiece
      * @private
      */
     _onCursorPositionChanged (position) {
-        this.setState(position);
+        _chessPiecePreview.setState(position);
     }
 }
